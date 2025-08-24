@@ -1,14 +1,14 @@
 import { Module } from '@/core'
 
 import AppController from '@/app/app.controller'
-import AppService from '@/app/app.service'
 import AuthModule from '@/app/auth/auth.module'
 import PostModule from '@/app/post/post.module'
-import DrizzleService from '@/services/drizzle.service'
+import DrizzleService from '@/common/services/drizzle.service'
+import JwtService from '@/common/services/jwt.service'
 
 @Module({
   imports: [AuthModule, PostModule],
   controllers: [AppController],
-  providers: [AppService, DrizzleService],
+  providers: [DrizzleService, JwtService],
 })
 export default class AppModule {}

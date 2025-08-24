@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm'
 
 import { Injectable } from '@/core'
 
-import DrizzleService from '@/services/drizzle.service'
+import DrizzleService from '@/common/services/drizzle.service'
 
 @Injectable()
 export default class PostService {
