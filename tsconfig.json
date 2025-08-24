@@ -1,17 +1,16 @@
 {
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    // File Layout
-    "rootDir": "./src",
-    "outDir": "./dist",
-
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "preserve",
     "moduleResolution": "bundler",
     "target": "esnext",
-    "lib": ["esnext"],
+    "lib": ["esnext", "dom", "dom.iterable"],
     "types": ["node"],
+
+    "allowJs": true,
+    "checkJs": true,
 
     // Other Outputs
     "sourceMap": true,
@@ -47,5 +46,7 @@
     "paths": {
       "@/*": ["src/*"]
     }
-  }
+  },
+  "include": ["src", "resources/js", "vite.config.ts"],
+  "exclude": ["node_modules", "dist"]
 }

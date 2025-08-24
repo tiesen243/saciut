@@ -60,9 +60,12 @@ export async function createApp(App: Type): Promise<AppInstance> {
   }
 
   return Promise.resolve({
-    configure: (middlewares: RequestHandler[]) => {
-      middlewares.forEach((middleware) => {
+    configure: (options) => {
+      options.middlewares.forEach((middleware) => {
         app.use(middleware)
+      })
+      Object.entries(options.settings).forEach(([key, value]) => {
+        app.set(key, value)
       })
     },
 

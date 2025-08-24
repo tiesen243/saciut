@@ -10,7 +10,10 @@ export interface ModuleMetadata {
 }
 
 export interface AppInstance {
-  configure: (middlewares: RequestHandler[]) => void
+  configure: (options: {
+    middlewares: RequestHandler[]
+    settings: Record<string, unknown>
+  }) => void
   listen: (port: number) => Promise<void>
 }
 

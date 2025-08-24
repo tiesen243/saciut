@@ -10,11 +10,6 @@ export default class AppController {
 
   @Get('/')
   getHello(_: Request, res: Response): void {
-    res.send(this.appService.getHello())
-  }
-
-  @Get('/health')
-  getHealth(_: Request, res: Response): void {
-    res.send('OK')
+    res.render('index', { message: this.appService.getHello() })
   }
 }

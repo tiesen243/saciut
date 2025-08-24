@@ -9,13 +9,19 @@ import AppModule from '@/app/app.module'
 async function bootstrap() {
   const app = await createApp(AppModule)
 
-  app.configure([
-    cors(),
-    cookieParser(),
-    express.json(),
-    express.urlencoded({ extended: true }),
-    express.static('public'),
-  ])
+  app.configure({
+    settings: {
+      'view engine': 'ejs',
+      views: 'resources/views',
+    },
+    middlewares: [
+      cors(),
+      cookieParser(),
+      express.json(),
+      express.urlencoded({ extended: true }),
+      express.static('public'),
+    ],
+  })
 
   await app.listen(3000)
 }
