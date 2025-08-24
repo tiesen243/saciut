@@ -3,7 +3,7 @@ import importPlugin from 'eslint-plugin-import'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['*.config.*'] },
+  { ignores: ['dist', '*.config.*'] },
   {
     files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'],
     plugins: { import: importPlugin },

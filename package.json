@@ -5,7 +5,12 @@
   "scripts": {
     "build": "tsc",
     "dev": "bun run --hot src/main.ts",
-    "start": "bun dist/main.js"
+    "format": "prettier --check . --cache --cache-location .cache/prettier",
+    "format:fix": "prettier --check . --write --cache --cache-location .cache/prettier",
+    "lint": "eslint . --cache --cache-location .cache/eslint",
+    "lint:fix": "eslint . --fix --cache --cache-location .cache/eslint",
+    "start": "bun dist/main.js",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",

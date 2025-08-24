@@ -2,6 +2,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
+    "tsBuildInfoFile": "${configDir}/.cache/tsbuildinfo.json",
 
     // Environment Settings
     "module": "preserve",
