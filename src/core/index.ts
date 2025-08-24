@@ -1,6 +1,12 @@
 import 'reflect-metadata'
 
-import type { Express, RequestHandler } from 'express'
+import type {
+  Express,
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response,
+} from 'express'
 import express from 'express'
 
 import type { AppInstance, Method, Type } from '@/core/decorators/types'
@@ -11,6 +17,7 @@ import {
   isInjectable,
 } from '@/core/decorators'
 import { getRoutes } from '@/core/decorators/method'
+import { getParams, ParamType, parsedSchema } from '@/core/decorators/params'
 
 export async function createApp(App: Type): Promise<AppInstance> {
   const app: Express = express()
@@ -47,13 +54,57 @@ export async function createApp(App: Type): Promise<AppInstance> {
 
       await Promise.all(
         routes.map((route) => {
+          const handler = (req: Request, res: Response, next: NextFunction) => {
+            const params = getParams(controller, route.name)
+            const args: unknown[] = []
+
+            params.forEach((param) => {
+              switch (param.type) {
+                case ParamType.BODY:
+                  args[param.index] = param.schema
+                    ? parsedSchema(param.schema, req.body, res)
+                    : req.body
+                  break
+                case ParamType.QUERY:
+                  args[param.index] = param.schema
+                    ? parsedSchema(param.schema, req.query, res)
+                    : req.query
+                  break
+                case ParamType.PARAM:
+                  args[param.index] = param.schema
+                    ? parsedSchema(param.schema, req.params, res)
+                    : req.params
+                  break
+                case ParamType.HEADERS:
+                  args[param.index] = req.headers
+                  break
+                case ParamType.COOKIES:
+                  args[param.index] = param.schema
+                    ? parsedSchema(param.schema, req.cookies, res)
+                    : req.cookies
+                  break
+                case ParamType.REQUEST:
+                  args[param.index] = req
+                  break
+                case ParamType.RESPONSE:
+                  args[param.index] = res
+                  break
+                case ParamType.NEXT:
+                  args[param.index] = next
+                  break
+                default:
+                  args[param.index] = undefined
+              }
+            })
+
+            if (res.headersSent) return
+            ;(controller[route.name] as RequestHandler)(
+              ...(args as Parameters<RequestHandler>),
+            )
+          }
+
           const method = route.method.toLowerCase() as Method
-          app[method](
-            `${prefix}${route.path}`.replace(/\/+/g, '/'),
-            (req, res, next) => {
-              ;(controller[route.name] as RequestHandler)(req, res, next)
-            },
-          )
+          app[method](`${prefix}${route.path}`.replace(/\/+/g, '/'), handler)
         }),
       )
     }
@@ -79,5 +130,5 @@ export async function createApp(App: Type): Promise<AppInstance> {
 }
 
 export * from '@/core/decorators'
-export * from '@/core/decorators/dto'
 export * from '@/core/decorators/method'
+export * from '@/core/decorators/params'

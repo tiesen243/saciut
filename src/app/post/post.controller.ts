@@ -1,8 +1,9 @@
-import type { Request, Response } from 'express'
+import type { Response } from 'express'
 
-import { Controller, DTO, Get, Post } from '@/core'
+import { Body, Controller, Get, Post, Query, Res } from '@/core'
 
-import { CreatePostDto, GetPostsDto } from '@/app/post/post.dto'
+import type { CreatePostType, QueryType } from '@/app/post/post.dto'
+import { CreatePostSchema, QuerySchema } from '@/app/post/post.dto'
 import PostService from '@/app/post/post.service'
 
 @Controller('/posts')
@@ -10,17 +11,15 @@ export default class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Get('/')
-  @DTO(GetPostsDto)
-  getPosts(req: Request, res: Response): void {
-    console.log(req.query)
-
-    res.status(200).json({ data: this.postService.getPosts() })
+  getPosts(@Query(QuerySchema) query: QueryType, @Res() res: Response): void {
+    res.status(200).json({ data: this.postService.getPosts(), query })
   }
 
   @Post('/')
-  @DTO(CreatePostDto)
-  createPost(req: Request, res: Response): void {
-    console.log(req.body)
-    res.status(201).json({ message: 'Post created' })
+  createPost(
+    @Body(CreatePostSchema) body: CreatePostType,
+    @Res() res: Response,
+  ): void {
+    res.status(201).json({ message: 'Post created', post: body })
   }
 }

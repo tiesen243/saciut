@@ -12,8 +12,8 @@ export interface RouteDefinition {
 
 const ROUTES_KEY = Symbol('routes')
 
-function Route(path: string, method: string): MethodDecorator {
-  return function RouteDecorator<T = RequestHandler>(
+function createMethodDecorator(path: string, method: string): MethodDecorator {
+  return function MethodDecorator<T = RequestHandler>(
     target: object,
     propertyKey: string | symbol,
     descriptor: TypedPropertyDescriptor<T>,
@@ -37,11 +37,19 @@ export function getRoutes(target: Type): RouteDefinition[] {
   return (Reflect.getMetadata(ROUTES_KEY, target) ?? []) as RouteDefinition[]
 }
 
-export const Get = (path: string): MethodDecorator => Route(path, 'GET')
-export const Post = (path: string): MethodDecorator => Route(path, 'POST')
-export const Put = (path: string): MethodDecorator => Route(path, 'PUT')
-export const Delete = (path: string): MethodDecorator => Route(path, 'DELETE')
-export const Patch = (path: string): MethodDecorator => Route(path, 'PATCH')
-export const Options = (path: string): MethodDecorator => Route(path, 'OPTIONS')
-export const Head = (path: string): MethodDecorator => Route(path, 'HEAD')
-export const All = (path: string): MethodDecorator => Route(path, 'ALL')
+export const Get = (path: string): MethodDecorator =>
+  createMethodDecorator(path, 'GET')
+export const Post = (path: string): MethodDecorator =>
+  createMethodDecorator(path, 'POST')
+export const Put = (path: string): MethodDecorator =>
+  createMethodDecorator(path, 'PUT')
+export const Delete = (path: string): MethodDecorator =>
+  createMethodDecorator(path, 'DELETE')
+export const Patch = (path: string): MethodDecorator =>
+  createMethodDecorator(path, 'PATCH')
+export const Options = (path: string): MethodDecorator =>
+  createMethodDecorator(path, 'OPTIONS')
+export const Head = (path: string): MethodDecorator =>
+  createMethodDecorator(path, 'HEAD')
+export const All = (path: string): MethodDecorator =>
+  createMethodDecorator(path, 'ALL')
