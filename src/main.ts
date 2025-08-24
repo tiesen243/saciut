@@ -1,6 +1,7 @@
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
+import morgan from 'morgan'
 
 import { createApp } from '@/core'
 
@@ -20,6 +21,7 @@ async function bootstrap() {
       express.json(),
       express.urlencoded({ extended: true }),
       express.static('public'),
+      morgan('dev'),
     ],
   })
 
