@@ -62,5 +62,3 @@ export function Injectable(): ClassDecorator {
 export function isInjectable(target: Type): boolean {
   return !!Reflect.getMetadata(INJECTABLE_METADATA_KEY, target)
 }
-
-export * from './method'

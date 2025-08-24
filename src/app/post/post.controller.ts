@@ -1,7 +1,8 @@
 import type { Request, Response } from 'express'
 
-import { Controller, Get } from '@/core/decorators'
+import { Controller, DTO, Get } from '@/core'
 
+import { GetPostsDto } from '@/app/post/post.dto'
 import PostService from '@/app/post/post.service'
 
 @Controller('/posts')
@@ -9,7 +10,10 @@ export default class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Get('/')
-  getPosts(_: Request, res: Response): void {
+  @DTO(GetPostsDto)
+  getPosts(req: Request, res: Response): void {
+    console.log(req.query)
+
     res.status(200).json({ data: this.postService.getPosts() })
   }
 }

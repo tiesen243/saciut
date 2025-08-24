@@ -16,7 +16,7 @@ const config = {
     '<TYPES>',
     '<THIRD_PARTY_MODULES>',
     '',
-    '<TYPES>^(@/core/(.*)$)',
+    '<TYPES>^@/core',
     '^@/core',
     '',
     '<TYPES>^(@/(.*)$)',

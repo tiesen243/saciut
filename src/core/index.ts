@@ -8,9 +8,9 @@ import {
   getControllerPrefix,
   getControllers,
   getProviders,
-  getRoutes,
   isInjectable,
 } from '@/core/decorators'
+import { getRoutes } from '@/core/decorators/method'
 
 export async function createApp(App: Type): Promise<AppInstance> {
   const app: Express = express()
@@ -71,3 +71,7 @@ export async function createApp(App: Type): Promise<AppInstance> {
       }),
   })
 }
+
+export * from '@/core/decorators'
+export * from '@/core/decorators/dto'
+export * from '@/core/decorators/method'

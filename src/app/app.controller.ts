@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 
-import { Controller, Get } from '@/core/decorators'
+import { Controller, Get } from '@/core'
 
 import AppService from '@/app/app.service'
 

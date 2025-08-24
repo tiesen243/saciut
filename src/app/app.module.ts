@@ -1,4 +1,4 @@
-import { Module } from '@/core/decorators'
+import { Module } from '@/core'
 
 import AppController from '@/app/app.controller'
 import AppService from '@/app/app.service'
@@ -6,7 +6,6 @@ import PostModule from '@/app/post/post.module'
 
 @Module({
   imports: [PostModule],
-
   controllers: [AppController],
   providers: [AppService],
 })

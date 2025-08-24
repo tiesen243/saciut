@@ -1,4 +1,4 @@
-import { Module } from '@/core/decorators'
+import { Module } from '@/core'
 
 import PostController from '@/app/post/post.controller'
 import PostService from '@/app/post/post.service'
