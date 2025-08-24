@@ -32,6 +32,8 @@ export default tseslint.config(
       '@typescript-eslint/prefer-promise-reject-errors': 'off',
       '@typescript-eslint/restrict-template-expressions': 'off',
       'import/no-anonymous-default-export': 'warn',
+
+      '@typescript-eslint/no-extraneous-class': 'off',
     },
   },
   {

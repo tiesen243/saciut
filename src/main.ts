@@ -1,31 +1,23 @@
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import { json, static as static_, urlencoded } from 'express'
+import express from 'express'
 
-import HomeController from '@/app/controllers/home.controller'
-import PostController from '@/app/controllers/post.controller'
-import Auth from '@/app/services/auth'
-import Application from '@/core/application'
+import { createApp } from '@/core'
 
-const PORT = parseInt(process.env.PORT ?? '3000', 10)
+import AppModule from '@/app/app.module'
 
 async function bootstrap() {
-  const app = new Application()
+  const app = await createApp(AppModule)
 
-  app.configure({
-    prefix: '/api',
-    controllers: [HomeController, PostController],
-    plugins: [
-      cookieParser() as never,
-      cors(),
-      json(),
-      static_('public'),
-      urlencoded({ extended: true }),
-      Auth.middleware(),
-    ],
-  })
+  app.configure([
+    cors(),
+    cookieParser(),
+    express.json(),
+    express.urlencoded({ extended: true }),
+    express.static('public'),
+  ])
 
-  await app.listen(PORT)
+  await app.listen(3000)
 }
 
 void bootstrap()
