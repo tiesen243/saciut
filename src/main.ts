@@ -10,9 +10,10 @@ import Application from '@/core/application'
 const PORT = parseInt(process.env.PORT ?? '3000', 10)
 
 async function bootstrap() {
-  const app = new Application('/api')
+  const app = new Application()
 
   app.configure({
+    prefix: '/api',
     controllers: [HomeController, PostController],
     plugins: [
       cookieParser() as never,

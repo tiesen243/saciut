@@ -12,13 +12,14 @@ import type {
 export default class Application {
   private server: Express
 
-  constructor(private prefix = '') {
+  constructor() {
     this.server = express()
 
     this.server.use(this.logger())
   }
 
   public configure(config: {
+    prefix?: string
     controllers: Controller[]
     plugins?: RequestHandler[]
     settings?: Map<string, unknown>
@@ -37,7 +38,7 @@ export default class Application {
       const routes = Controller.routes ?? []
 
       routes.forEach((route) => {
-        let fullPath = `${this.prefix}${prefix}${route.path}`
+        let fullPath = `${config.prefix}${prefix}${route.path}`
         fullPath = fullPath.replace(/\/{2,}/g, '/')
         if (!fullPath.startsWith('/')) fullPath = '/' + fullPath
 
