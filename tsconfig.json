@@ -1,6 +1,12 @@
 {
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
+    // Basic Options
+    "incremental": true,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "tsBuildInfoFile": "${configDir}/.cache/tsbuildinfo.json",
+
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "preserve",
@@ -47,6 +53,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "resources/js", "vite.config.ts"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

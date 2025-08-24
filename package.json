@@ -9,7 +9,7 @@
     "format:fix": "prettier --check . --write --cache --cache-location .cache/prettier",
     "lint": "eslint . --cache --cache-location .cache/eslint",
     "lint:fix": "eslint . --fix --cache --cache-location .cache/eslint",
-    "start": "bun dist/main.js",
+    "start": "bun run --env-file .env dist/main.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
