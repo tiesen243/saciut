@@ -15,44 +15,48 @@ import { getRoutes } from '@/core/decorators/method'
 export async function createApp(App: Type): Promise<AppInstance> {
   const app: Express = express()
 
-  const controllers = getControllers(App)
-  const providers = getProviders(App)
+  async function registerRoutes() {
+    const controllers = getControllers(App)
+    const providers = getProviders(App)
 
-  const providerInstances = new Map<Type, unknown>()
-  for (const ProviderClass of providers) {
-    if (!isInjectable(ProviderClass))
-      throw new Error(`${ProviderClass.name} is not injectable`)
-    providerInstances.set(ProviderClass, new ProviderClass())
-  }
+    const providerInstances = new Map<Type, unknown>()
+    for (const ProviderClass of providers) {
+      if (!isInjectable(ProviderClass))
+        throw new Error(`${ProviderClass.name} is not injectable`)
+      providerInstances.set(ProviderClass, new ProviderClass())
+    }
 
-  for (const ControllerClass of controllers) {
-    const prefix = getControllerPrefix(ControllerClass)
+    for (const ControllerClass of controllers) {
+      const prefix = getControllerPrefix(ControllerClass)
 
-    const parmasTypes = Reflect.getMetadata(
-      'design:paramtypes',
-      ControllerClass,
-    ) as Type[]
-    const dependencies = parmasTypes.map((param) => {
-      const provider = providerInstances.get(param)
-      if (!provider)
-        throw new Error(
-          `No provider found for dependency: ${param.name} in controller: ${ControllerClass.name}`,
-        )
-      return provider
-    })
+      const parmasTypes = Reflect.getMetadata(
+        'design:paramtypes',
+        ControllerClass,
+      ) as Type[]
+      const dependencies = parmasTypes.map((param) => {
+        const provider = providerInstances.get(param)
+        if (!provider)
+          throw new Error(
+            `No provider found for dependency: ${param.name} in controller: ${ControllerClass.name}`,
+          )
+        return provider
+      })
 
-    const controller = new ControllerClass(...dependencies) as never
-    const routes = getRoutes(ControllerClass)
+      const controller = new ControllerClass(...dependencies) as never
+      const routes = getRoutes(ControllerClass)
 
-    routes.forEach((route) => {
-      const method = route.method.toLowerCase() as Method
-      app[method](
-        `${prefix}${route.path}`.replace(/\/+/g, '/'),
-        (req, res, next) => {
-          ;(controller[route.name] as RequestHandler)(req, res, next)
-        },
+      await Promise.all(
+        routes.map((route) => {
+          const method = route.method.toLowerCase() as Method
+          app[method](
+            `${prefix}${route.path}`.replace(/\/+/g, '/'),
+            (req, res, next) => {
+              ;(controller[route.name] as RequestHandler)(req, res, next)
+            },
+          )
+        }),
       )
-    })
+    }
   }
 
   return Promise.resolve({
@@ -62,13 +66,12 @@ export async function createApp(App: Type): Promise<AppInstance> {
       })
     },
 
-    listen: async (port: number) =>
-      new Promise<void>((resolve) => {
-        app.listen(port, () => {
-          console.log(`Server is running on http://localhost:${port}`)
-          resolve()
-        })
-      }),
+    listen: async (port: number) => {
+      await registerRoutes()
+      app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}`)
+      })
+    },
   })
 }
 
