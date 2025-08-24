@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "bun run --hot src/main.ts",
+    "dev": "bun run --env-file .env --hot src/main.ts",
     "format": "prettier --check . --cache --cache-location .cache/prettier",
     "format:fix": "prettier --check . --write --cache --cache-location .cache/prettier",
     "lint": "eslint . --cache --cache-location .cache/eslint",
@@ -15,6 +15,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "drizzle-orm": "^0.44.4",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "reflect-metadata": "^0.2.2",
@@ -27,7 +28,9 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.3.0",
+    "drizzle-kit": "^0.31.4",
     "eslint-plugin-import": "^2.32.0",
+    "pg": "^8.16.3",
     "prettier": "^3.6.2",
     "prettier-plugin-ejs": "^1.0.3",
     "typescript": "^5.9.2",

@@ -5,6 +5,11 @@ export const QuerySchema = z.object({
 })
 export type QueryType = z.infer<typeof QuerySchema>
 
+export const ParamSchema = z.object({
+  id: z.uuid(),
+})
+export type ParamType = z.infer<typeof ParamSchema>
+
 export const CreatePostSchema = z.object({
   title: z.string().min(1),
   content: z.string().min(1),

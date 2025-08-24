@@ -36,7 +36,9 @@ function createParamDecorator(
       target,
       propertyKey ?? '',
     ) ?? []) as ParamDefinition[]
+
     existing.push({ index, type, schema })
+
     Reflect.defineMetadata(
       PARAMS_METADATA_KEY,
       existing,
@@ -59,12 +61,12 @@ export function getParams(
 
 export function parsedSchema(schema: z.ZodType, data: unknown, res: Response) {
   const parsed = schema.safeParse(data)
-  if (!parsed.success) {
+  if (!parsed.success)
     return res.status(400).json({
       error: 'Invalid request data',
       details: z.flattenError(parsed.error).fieldErrors,
     })
-  }
+
   return parsed.data
 }
 

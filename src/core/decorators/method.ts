@@ -28,7 +28,6 @@ function createMethodDecorator(path: string, method: string): MethodDecorator {
     })
 
     Reflect.defineMetadata(ROUTES_KEY, routes, target.constructor)
-
     return descriptor
   }
 }

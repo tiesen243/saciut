@@ -12,7 +12,7 @@ async function bootstrap() {
   app.configure({
     settings: {
       'view engine': 'ejs',
-      views: 'resources/views',
+      views: 'views',
     },
     middlewares: [
       cors(),

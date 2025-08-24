@@ -44,6 +44,7 @@ export function Controller(prefix?: string): ClassDecorator {
   const path = prefix ?? '/'
   return (target) => {
     Reflect.defineMetadata(CONTROLLER_PREFIX_METADATA_KEY, path, target)
+    Reflect.defineMetadata(CONTROLLERS_METADATA_KEY, [target], target)
   }
 }
 
@@ -56,6 +57,7 @@ export function getControllerPrefix(target: Type): string {
 export function Injectable(): ClassDecorator {
   return (target) => {
     Reflect.defineMetadata(INJECTABLE_METADATA_KEY, true, target)
+    Reflect.defineMetadata(PROVIDERS_METADATA_KEY, [target], target)
   }
 }
 
