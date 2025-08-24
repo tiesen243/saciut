@@ -1,0 +1,30 @@
+{
+  "name": "saciut",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "bun run --hot src/main.ts",
+    "start": "bun dist/main.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jose": "^6.0.13",
+    "zod": "^4.1.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.34.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.6.2",
+    "@types/bun": "^1.2.20",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.3.0",
+    "eslint-plugin-import": "^2.32.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.40.0"
+  }
+}
