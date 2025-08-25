@@ -5,7 +5,7 @@ const connectionString = `postgresql://${process.env.DB_USER}:${encodeURICompone
 export default defineConfig({
   dialect: 'postgresql',
   dbCredentials: { url: connectionString },
-  schema: './src/services/drizzle.service/schema.ts',
+  schema: './src/common/services/drizzle.service/schema.ts',
   casing: 'snake_case',
   strict: true,
 })
