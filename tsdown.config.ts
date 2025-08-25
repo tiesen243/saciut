@@ -8,5 +8,4 @@ export default defineConfig({
   shims: true,
   clean: true,
   minify: true,
-  onSuccess: 'node ./dist/main.js',
 })
