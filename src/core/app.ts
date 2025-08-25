@@ -18,7 +18,7 @@ export async function createApp(App: Type): Promise<AppInstance> {
     listen: async (port: number) => {
       await registerRoutes(app, App)
       app.listen(port, () => {
-        console.log(`🚀 Server is running on http://localhost:${port}`)
+        console.log(`Server is running on http://localhost:${port}`)
       })
     },
   })

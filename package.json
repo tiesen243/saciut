@@ -4,12 +4,12 @@
   "type": "module",
   "scripts": {
     "build": "tsdown",
-    "dev": "bun run --env-file=.env --hot src/main.ts",
+    "dev": "NODE_ENV=development tsdown --watch --logLevel silent --on-success \"node --env-file-if-exists=.env ./dist/main.js\"",
     "format": "prettier --check . --cache --cache-location .cache/prettier",
     "format:fix": "prettier --check . --write --cache --cache-location .cache/prettier",
     "lint": "eslint . --cache --cache-location .cache/eslint",
     "lint:fix": "eslint . --fix --cache --cache-location .cache/eslint",
-    "start": "node --env-file-if-exists=.env ./dist/main.js",
+    "start": "NODE_ENV=production node --env-file-if-exists=.env ./dist/main.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
