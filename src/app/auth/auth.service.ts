@@ -1,57 +1,85 @@
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 
 import { Injectable } from '@/core'
 
 import { SignInType, SignUpType } from '@/app/auth/auth.schema'
+import { Password } from '@/app/auth/lib/password'
 import DrizzleService from '@/common/services/drizzle.service'
 
 @Injectable()
 export default class AuthService {
+  private readonly password = new Password()
+
   constructor(private readonly db: DrizzleService) {}
 
-  async getUser(
-    id: string,
-  ): Promise<typeof this.db.schema.users.$inferSelect | null> {
-    const { users } = this.db.schema
-    const [user] = await this.db
+  async getUser(id: string): Promise<typeof this.db.schema.users.$inferSelect> {
+    const { db, schema } = this.db
+
+    const [user] = await db
       .select()
-      .from(users)
-      .where(eq(users.id, id))
-      .limit(1)
-    return user ?? null
+      .from(schema.users)
+      .where(eq(schema.users.id, id))
+    if (!user) throw new Error('You are not signed in or user not found')
+
+    return user
   }
 
-  async signUp(data: SignUpType): Promise<{ id: string }> {
-    const { users } = this.db.schema
+  async signUp(data: SignUpType): Promise<{ userId: string }> {
+    const {
+      db,
+      schema: { accounts, users },
+    } = this.db
 
-    const [existingUser] = await this.db
-      .select()
+    const [existingUser] = await db
+      .select({ id: users.id })
       .from(users)
       .where(eq(users.email, data.email))
       .limit(1)
     if (existingUser) throw new Error('User already exists')
 
-    const [user] = await this.db
+    const [user] = await db
       .insert(users)
-      .values({
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      })
+      .values({ name: data.name, email: data.email })
       .returning({ id: users.id })
-    return user ?? { id: '' }
+    if (!user) throw new Error('Failed to create user')
+    const [account] = await db
+      .insert(accounts)
+      .values({
+        userId: user.id,
+        accountId: user.id,
+        provider: 'credentials',
+        password: await this.password.hash(data.password),
+      })
+      .returning()
+    if (!account) throw new Error('Failed to create account')
+
+    return { userId: user.id }
   }
 
-  async signIn(data: SignInType): Promise<{ id: string }> {
-    const { users } = this.db.schema
+  async signIn(data: SignInType): Promise<{ userId: string }> {
+    const {
+      db,
+      schema: { accounts, users },
+    } = this.db
 
-    const [user] = await this.db
-      .select({ id: users.id, password: users.password })
+    const [user] = await db
+      .select({ id: users.id, password: accounts.password })
       .from(users)
       .where(eq(users.email, data.email))
       .limit(1)
-    if (!user) throw new Error('User not found')
-    if (user.password !== data.password) throw new Error('Invalid password')
-    return user
+      .innerJoin(
+        accounts,
+        and(
+          eq(accounts.userId, users.id),
+          eq(accounts.accountId, users.id),
+          eq(accounts.provider, 'credentials'),
+        ),
+      )
+    if (!user?.password) throw new Error('Invalid credentials')
+
+    const isValid = await this.password.verify(user.password, data.password)
+    if (!isValid) throw new Error('Invalid credentials')
+
+    return { userId: user.id }
   }
 }

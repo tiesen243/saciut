@@ -1,19 +1,30 @@
 import * as z from 'zod'
 
-export const CookieSchema = z.object({
-  'auth.token': z.string().min(1).optional(),
+export const CookiesSchema = z.object({
+  'auth.token': z.string().startsWith('ey').optional(),
 })
-export type CookieType = z.infer<typeof CookieSchema>
+export type CookiesType = z.infer<typeof CookiesSchema>
 
-export const SignUpSchema = z.object({
-  name: z.string().min(1),
+export const UserSchema = z.object({
+  id: z.cuid2(),
+  name: z.string().min(2).max(100),
   email: z.email(),
-  password: z.string().min(8),
+  createdAt: z.date(),
 })
-export type SignUpType = z.infer<typeof SignUpSchema>
+export type UserType = z.infer<typeof UserSchema>
 
 export const SignInSchema = z.object({
   email: z.email(),
-  password: z.string().min(6),
+  password: z
+    .string()
+    .regex(
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?]).{8,}$/,
+      'Password not strong enough',
+    ),
 })
 export type SignInType = z.infer<typeof SignInSchema>
+
+export const SignUpSchema = SignInSchema.extend({
+  name: z.string().min(2).max(100),
+})
+export type SignUpType = z.infer<typeof SignUpSchema>

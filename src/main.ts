@@ -1,3 +1,4 @@
+import { apiReference } from '@scalar/express-api-reference'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
@@ -10,20 +11,23 @@ import AppModule from '@/app/app.module'
 async function bootstrap() {
   const app = await createApp(AppModule)
 
-  app.configure({
-    settings: {
-      'view engine': 'ejs',
-      views: 'views',
-    },
-    middlewares: [
-      cors(),
-      cookieParser(),
-      express.json(),
-      express.urlencoded({ extended: true }),
-      express.static('public'),
-      morgan('dev'),
-    ],
-  })
+  app.set('view engine', 'ejs')
+  app.set('views', 'views')
+
+  app.use(
+    '/docs',
+    apiReference({
+      theme: 'elysiajs',
+      url: '/openapi.json',
+    }),
+  )
+
+  app.use(cors())
+  app.use(cookieParser())
+  app.use(express.json())
+  app.use(express.urlencoded({ extended: true }))
+  app.use(express.static('public'))
+  app.use(morgan('dev'))
 
   await app.listen(3000)
 }
