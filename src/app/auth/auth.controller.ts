@@ -1,18 +1,34 @@
 import type { Response } from 'express'
 
-import { Body, Controller, Cookies, Get, Headers, Post, Res } from '@/core'
+import {
+  Body,
+  Controller,
+  Cookies,
+  Get,
+  Headers,
+  Param,
+  Post,
+  Query,
+  Res,
+} from '@/core'
 
 import type {
   CookiesType,
+  OAuthParamsType,
+  OAuthQueryType,
   SignInType,
   SignUpType,
 } from '@/app/auth/auth.schema'
+import { authConfig } from '@/app/auth/auth.module'
 import {
   CookiesSchema,
+  OAuthParamsSchema,
+  OAuthQuerySchema,
   SignInSchema,
   SignUpSchema,
 } from '@/app/auth/auth.schema'
 import AuthService from '@/app/auth/auth.service'
+import { generateStateOrCode } from '@/app/auth/lib/crypto'
 import JwtService from '@/common/services/jwt.service'
 
 @Controller('/api/auth')
@@ -48,6 +64,35 @@ export default class AuthController {
         details: error instanceof Error ? error.message : error,
       })
     }
+  }
+
+  @Get('/:provider')
+  async oauthRedirect(
+    @Param(OAuthParamsSchema) params: OAuthParamsType,
+    @Query(OAuthQuerySchema) query: OAuthQueryType,
+    @Res() res: Response,
+  ) {
+    const { providers } = authConfig
+    if (!(params.provider in providers))
+      res.status(400).json({ status: 400, message: 'Provider not supported' })
+    const provider = providers[params.provider as keyof typeof providers]
+
+    const state = generateStateOrCode()
+    const codeVerifier = generateStateOrCode()
+    const redirectUrl = query.redirect_uri ?? '/'
+
+    const callbackUrl = await provider.createAuthorizationUrl(
+      state,
+      codeVerifier,
+    )
+
+    const opts = { path: '/', maxAge: 60 * 5 }
+
+    res
+      .cookie('auth.state', state, opts)
+      .cookie('auth.code', codeVerifier, opts)
+      .cookie('auth.redirect', redirectUrl, opts)
+      .redirect(callbackUrl.toString())
   }
 
   @Post('/sign-up')
