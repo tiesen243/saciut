@@ -2,8 +2,8 @@ import type { Response } from 'express'
 
 import { Controller, Get, Param, Res } from '@/core'
 
-import type { ParamType } from '@/app/post/post.dto'
-import { ParamSchema } from '@/app/post/post.dto'
+import type { ParamType } from '@/app/post/post.schema'
+import { ParamSchema } from '@/app/post/post.schema'
 import PostService from '@/app/post/post.service'
 
 @Controller('/posts')
