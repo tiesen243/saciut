@@ -2,6 +2,9 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "bun run build",
   "functions": {
-    "dist/main.js": {}
+    "dist/main.js": {
+      "memory": 3000,
+      "maxDuration": 30
+    }
   }
 }
