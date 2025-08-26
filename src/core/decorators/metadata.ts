@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 
-import type { ModuleMetadata, Type } from '@/core/decorators/types'
+import type { ModuleMetadata, Type } from '@/core/types'
 
 const CONTROLLERS_METADATA_KEY = Symbol('controllers')
 const PROVIDERS_METADATA_KEY = Symbol('providers')

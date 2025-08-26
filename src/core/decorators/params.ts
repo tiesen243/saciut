@@ -1,5 +1,6 @@
-import type { Response } from 'express'
 import * as z from 'zod'
+
+import { HttpError } from '@/common/utils/http'
 
 const PARAMS_METADATA_KEY = Symbol('params')
 
@@ -59,11 +60,11 @@ export function getParams(
   ) as ParamDefinition[]
 }
 
-export function parsedSchema(schema: z.ZodType, data: unknown, res: Response) {
+export function parsedSchema(schema: z.ZodType, data: unknown) {
   const parsed = schema.safeParse(data)
   if (!parsed.success)
-    return res.status(400).json({
-      error: 'Invalid request data',
+    throw new HttpError('BAD_REQUEST', {
+      message: 'Invalid request data',
       details: z.flattenError(parsed.error).fieldErrors,
     })
 

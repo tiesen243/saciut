@@ -1,14 +1,15 @@
-import type { Response } from 'express'
+import type { Request, Response } from 'express'
 
 import {
   Body,
   Controller,
   Cookies,
   Get,
-  Headers,
+  Guard,
   Param,
   Post,
   Query,
+  Req,
   Res,
 } from '@/core'
 
@@ -19,6 +20,7 @@ import type {
   SignInType,
   SignUpType,
 } from '@/app/auth/auth.schema'
+import JwtGuard from '@/app/auth/auth.jwt'
 import { authConfig } from '@/app/auth/auth.module'
 import {
   CookiesSchema,
@@ -40,22 +42,16 @@ export default class AuthController {
   ) {}
 
   @Get('/get-session')
-  async getSession(
-    @Headers() headers: Record<string, string>,
-    @Cookies(CookiesSchema) cookies: CookiesType,
+  @Guard(JwtGuard)
+  getSession(
+    @Query(SignInSchema) query: SignInType,
+    @Req() req: Request,
     @Res() res: Response,
   ) {
-    const token =
-      cookies['auth.token'] ??
-      headers.authorization?.replace('Bearer ', '') ??
-      ''
-    const decoded = await this.jwtService.verify(token)
-
-    const user = await this.authService.getUser(decoded?.sub ?? '')
     res.status(HttpCode.OK).json({
       status: HttpCode.OK,
       message: 'Get session successfully',
-      data: user,
+      data: req.user,
     })
   }
 

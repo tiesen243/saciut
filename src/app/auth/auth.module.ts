@@ -1,12 +1,13 @@
 import { Module } from '@/core'
 
 import AuthController from '@/app/auth/auth.controller'
+import JwtGuard from '@/app/auth/auth.jwt'
 import AuthService from '@/app/auth/auth.service'
 import Google from '@/app/auth/providers/google'
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtGuard],
 })
 export default class AuthModule {}
 

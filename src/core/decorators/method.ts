@@ -2,7 +2,7 @@ import 'reflect-metadata'
 
 import type { RequestHandler } from 'express'
 
-import type { Type } from '@/core/decorators/types'
+import type { Type } from '@/core/types'
 
 export interface RouteDefinition {
   path: string

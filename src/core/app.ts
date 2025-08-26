@@ -1,7 +1,7 @@
 import type { Express, NextFunction, Request, Response } from 'express'
 import express from 'express'
 
-import type { Type } from '@/core/decorators/types'
+import type { Type } from '@/core/types'
 import { registerRoutes } from '@/core/router'
 
 import { HttpError } from '@/common/utils/http'
@@ -18,10 +18,11 @@ export async function createApp(App: Type) {
 
       app.use(
         (error: unknown, req: Request, res: Response, _next: NextFunction) => {
-          console.error(
-            `[${req.method} ${req.path}]`,
-            error instanceof Error ? (error.stack ?? error.message) : error,
-          )
+          if (process.env.NODE_ENV !== 'production')
+            console.error(
+              `[${req.method} ${req.path}]`,
+              error instanceof Error ? (error.stack ?? error.message) : error,
+            )
 
           const statusCode = error instanceof HttpError ? error.statusCode : 500
           const message =

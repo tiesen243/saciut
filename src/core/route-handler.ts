@@ -1,6 +1,6 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express'
 
-import type { Type } from '@/core/decorators/types'
+import type { Type } from '@/core/types'
 import { getParams, ParamType, parsedSchema } from '@/core/decorators/params'
 
 export function createRouteHandler(
@@ -15,17 +15,17 @@ export function createRouteHandler(
       switch (param.type) {
         case ParamType.BODY:
           args[param.index] = param.schema
-            ? parsedSchema(param.schema, req.body, res)
+            ? parsedSchema(param.schema, req.body)
             : req.body
           break
         case ParamType.QUERY:
           args[param.index] = param.schema
-            ? parsedSchema(param.schema, req.query, res)
+            ? parsedSchema(param.schema, req.query)
             : req.query
           break
         case ParamType.PARAM:
           args[param.index] = param.schema
-            ? parsedSchema(param.schema, req.params, res)
+            ? parsedSchema(param.schema, req.params)
             : req.params
           break
         case ParamType.HEADERS:
@@ -33,7 +33,7 @@ export function createRouteHandler(
           break
         case ParamType.COOKIES:
           args[param.index] = param.schema
-            ? parsedSchema(param.schema, req.cookies, res)
+            ? parsedSchema(param.schema, req.cookies)
             : req.cookies
           break
         case ParamType.REQUEST:

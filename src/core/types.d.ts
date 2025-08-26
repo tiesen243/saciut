@@ -1,4 +1,4 @@
-import type { RequestHandler } from 'express'
+import type { NextFunction, Request, RequestHandler, Response } from 'express'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Type<T = any> = new (...args: any[]) => T
@@ -26,3 +26,11 @@ export type Method =
   | 'options'
   | 'head'
   | 'all'
+
+export interface CanActivate {
+  canActivate?: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => boolean | Promise<boolean>
+}

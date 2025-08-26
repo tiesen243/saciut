@@ -1,7 +1,8 @@
-import type { Express } from 'express'
+import type { Express, RequestHandler } from 'express'
 
-import type { Method, Type } from '@/core/decorators/types'
+import type { CanActivate, Method, Type } from '@/core/types'
 import { Container } from '@/core/container'
+import { getGuards } from '@/core/decorators/guard'
 import {
   getControllerPrefix,
   getControllers,
@@ -36,7 +37,26 @@ export async function registerRoutes(app: Express, App: Type) {
         const handler = createRouteHandler(controller, String(route.name))
         const method = route.method.toLowerCase() as Method
         const path = `${prefix}${route.path}`.replace(/\/+/g, '/')
-        app[method](path, handler)
+
+        const middlewares: RequestHandler[] = []
+        const guards = getGuards(controller, route.name)
+        if (guards.length > 0) {
+          const guardInstances = guards.map((G) =>
+            container.resolve<CanActivate>(G),
+          )
+          middlewares.push(async (req, res, next) => {
+            for (const guard of guardInstances) {
+              if (typeof guard.canActivate !== 'function') continue
+              const ok = await guard.canActivate(req, res, next)
+              if (!ok || res.headersSent) return
+            }
+            next()
+          })
+        }
+
+        middlewares.push(handler)
+
+        app[method](path, ...middlewares)
       }),
     )
   }

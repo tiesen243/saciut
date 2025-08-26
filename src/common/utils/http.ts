@@ -1,10 +1,10 @@
 export class HttpError extends Error {
   public statusCode: number
-  public details: string | undefined
+  public details: unknown
 
   constructor(
     statusCode: keyof typeof HttpErrorStatus,
-    options: { message?: string; details?: string } = {
+    options: { message?: string; details?: unknown } = {
       message: 'An error occurred',
       details: '',
     },

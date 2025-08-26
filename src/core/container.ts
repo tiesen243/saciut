@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 
-import type { Type } from '@/core/decorators/types'
+import type { Type } from '@/core/types'
 import { isInjectable } from '@/core/decorators/metadata'
 
 export class Container {
