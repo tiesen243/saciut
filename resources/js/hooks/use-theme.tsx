@@ -25,7 +25,7 @@ const ThemeProviderContext = React.createContext<ThemeProviderState | null>(
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
-  storageKey = 'vite-ui-theme',
+  storageKey = 'theme',
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = React.useState<Theme>(
@@ -67,6 +67,7 @@ export function ThemeProvider({
         : 'light'
 
       root.classList.add(systemTheme)
+      localStorage.setItem(storageKey, systemTheme)
       return
     }
 
