@@ -5,15 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Saciut</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <main>lorem ipsum</main>
-
-    <form action="/auth/login" method="POST">
-      <input type="text" name="name" placeholder="Name" />
-      <input type="email" name="email" placeholder="Email" />
-      <input type="password" name="password" placeholder="Password" />
-      <button type="submit">Submit</button>
-    </form>
+  <body class="bg-gray-50 min-h-screen">
+    <header class="bg-blue-700 text-white py-8 shadow">
+      <h1 class="text-4xl font-extrabold text-center tracking-tight">saciut</h1>
+      <p class="text-center mt-2 text-lg">
+        A modular TypeScript server framework inspired by NestJS, built on
+        Express.
+      </p>
+    </header>
+    <main class="max-w-2xl mx-auto mt-10 p-8 bg-white rounded-lg shadow">
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Features</h2>
+        <ul class="list-disc list-inside space-y-1 text-gray-700">
+          <li>Dependency Injection with decorators</li>
+          <li>Modular Architecture</li>
+          <li>Express Middleware support</li>
+          <li>Type-safe Routing</li>
+          <li>Validation with Zod</li>
+          <li>Database Ready (drizzle-orm, PostgreSQL)</li>
+          <li>View Rendering (EJS)</li>
+        </ul>
+      </section>
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold mb-2">Getting Started</h2>
+        <ol class="list-decimal list-inside text-gray-700 space-y-1">
+          <li>
+            Install dependencies:
+            <code class="bg-gray-100 px-2 py-1 rounded">bun install</code> or
+            <code>npm/yarn/pnpm install</code>
+          </li>
+          <li>Copy <code>.env.example</code> to <code>.env</code></li>
+          <li>
+            Run the app:
+            <code class="bg-gray-100 px-2 py-1 rounded">bun dev</code> or
+            <code>npm/yarn/pnpm dev</code>
+          </li>
+        </ol>
+        <p class="mt-2 text-sm text-gray-500">
+          Server runs at
+          <a href="http://localhost:3000" class="text-blue-600 underline"
+            >http://localhost:3000</a
+          >
+        </p>
+      </section>
+      <section>
+        <h2 class="text-xl font-semibold mb-2">Project Structure</h2>
+        <ul class="list-disc list-inside text-gray-700 space-y-1">
+          <li><code>src/core/</code>: Core decorators and DI container</li>
+          <li>
+            <code>src/app/</code>: Application modules, controllers, services
+          </li>
+          <li><code>src/common/</code>: Shared utilities and types</li>
+          <li><code>views/</code>: EJS templates</li>
+          <li><code>public/</code>: Static files</li>
+        </ul>
+      </section>
+      <footer class="mt-10 text-center text-gray-400 text-xs">
+        Licensed under the
+        <a
+          href="https://raw.githubusercontent.com/tiesen243/saciut/refs/heads/main/LICENSE"
+          class="underline"
+          >MIT License</a
+        >.
+      </footer>
+    </main>
   </body>
 </html>

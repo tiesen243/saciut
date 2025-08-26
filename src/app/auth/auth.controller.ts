@@ -30,6 +30,7 @@ import {
 import AuthService from '@/app/auth/auth.service'
 import { generateStateOrCode } from '@/app/auth/lib/crypto'
 import JwtService from '@/common/services/jwt.service'
+import { HttpCode, HttpError } from '@/common/utils/http'
 
 @Controller('/api/auth')
 export default class AuthController {
@@ -50,20 +51,59 @@ export default class AuthController {
       ''
     const decoded = await this.jwtService.verify(token)
 
-    try {
-      const user = await this.authService.getUser(decoded?.sub ?? '')
-      res.json({
-        status: 200,
-        message: 'Get session successfully',
-        data: user,
+    const user = await this.authService.getUser(decoded?.sub ?? '')
+    res.status(HttpCode.OK).json({
+      status: HttpCode.OK,
+      message: 'Get session successfully',
+      data: user,
+    })
+  }
+
+  @Post('/sign-up')
+  async signUp(
+    @Body(SignUpSchema) body: SignUpType,
+    @Res() res: Response,
+  ): Promise<void> {
+    const { userId } = await this.authService.signUp(body)
+    res.status(HttpCode.CREATED).json({
+      status: HttpCode.CREATED,
+      message: 'Sign up successfully',
+      data: { userId },
+    })
+  }
+
+  @Post('/sign-in')
+  async signIn(
+    @Body(SignInSchema) body: SignInType,
+    @Res() res: Response,
+  ): Promise<void> {
+    const { expiresIn } = authConfig
+    const { userId } = await this.authService.signIn(body)
+
+    const token = await this.jwtService.sign(
+      { sub: userId, aud: 'user' },
+      expiresIn.asString,
+    )
+
+    res
+      .status(HttpCode.OK)
+      .cookie('auth.token', token, {
+        ...cookieOptions,
+        maxAge: expiresIn.asMilliseconds,
       })
-    } catch (error) {
-      res.status(401).json({
-        status: 401,
-        message: 'Get session failed',
-        details: error instanceof Error ? error.message : error,
+      .json({
+        status: HttpCode.OK,
+        message: 'Sign in successfully',
+        data: { userId, token },
       })
-    }
+  }
+
+  @Post('/sign-out')
+  signOut(@Res() res: Response): void {
+    res
+      .status(HttpCode.OK)
+      .clearCookie('auth.token', cookieOptions)
+      .json({ status: HttpCode.OK, message: 'Sign out successfully' })
   }
 
   @Get('/:provider')
@@ -74,9 +114,9 @@ export default class AuthController {
   ) {
     const { providers } = authConfig
     if (!(params.provider in providers))
-      res.status(400).json({ status: 400, message: 'Provider not supported' })
-    const provider = providers[params.provider as keyof typeof providers]
+      throw new HttpError('BAD_REQUEST', { message: 'Provider not supported' })
 
+    const provider = providers[params.provider as keyof typeof providers]
     const state = generateStateOrCode()
     const codeVerifier = generateStateOrCode()
     const redirectUrl = query.redirect_uri ?? '/'
@@ -86,76 +126,62 @@ export default class AuthController {
       codeVerifier,
     )
 
-    const opts = { path: '/', maxAge: 60 * 5 }
-
     res
-      .cookie('auth.state', state, opts)
-      .cookie('auth.code', codeVerifier, opts)
-      .cookie('auth.redirect', redirectUrl, opts)
+      .cookie('auth.state', state, cookieOptions)
+      .cookie('auth.code', codeVerifier, cookieOptions)
+      .cookie('auth.redirect', redirectUrl, cookieOptions)
       .redirect(callbackUrl.toString())
   }
 
-  @Post('/sign-up')
-  async signUp(
-    @Body(SignUpSchema) body: SignUpType,
+  @Get('/callback/:provider')
+  async oauthCallback(
+    @Param(OAuthParamsSchema) params: OAuthParamsType,
+    @Query(OAuthQuerySchema) query: OAuthQueryType,
+    @Cookies(CookiesSchema) cookies: CookiesType,
     @Res() res: Response,
-  ): Promise<void> {
-    try {
-      const { userId } = await this.authService.signUp(body)
-      res.status(201).json({
-        status: 201,
-        message: 'Sign up successfully',
-        data: { userId },
-      })
-    } catch (error) {
-      res.status(400).json({
-        status: 400,
-        message: 'Sign up failed',
-        details: error instanceof Error ? error.message : error,
-      })
-    }
-  }
+  ) {
+    if (!(params.provider in authConfig.providers))
+      throw new HttpError('BAD_REQUEST', { message: 'Provider not supported' })
 
-  @Post('/sign-in')
-  async signIn(
-    @Body(SignInSchema) body: SignInType,
-    @Res() res: Response,
-  ): Promise<void> {
-    try {
-      const { userId } = await this.authService.signIn(body)
-      const token = await this.jwtService.sign({ sub: userId }, '7d')
-      res
-        .cookie('auth.token', token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        })
-        .json({
-          status: 200,
-          message: 'Sign in successfully',
-          data: { userId, token },
-        })
-    } catch (error) {
-      res.status(400).json({
-        status: 400,
-        message: 'Sign in failed',
-        details: error instanceof Error ? error.message : error,
-      })
-    }
-  }
+    const { providers, expiresIn } = authConfig
 
-  @Post('/sign-out')
-  signOut(@Res() res: Response): void {
+    const provider = providers[params.provider as keyof typeof providers]
+    if (
+      query.state !== cookies['auth.state'] ||
+      !query.code ||
+      !cookies['auth.code']
+    )
+      throw new HttpError('FORBIDDEN', { message: 'Invalid state or code' })
+
+    const userData = await provider.fetchUserData(
+      query.code,
+      cookies['auth.code'],
+    )
+    const { userId } = await this.authService.oauthSignIn({
+      ...userData,
+      provider: params.provider,
+    })
+    const token = await this.jwtService.sign(
+      { sub: userId, aud: 'user' },
+      expiresIn.asString,
+    )
+
     res
-      .clearCookie('auth.token', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+      .status(HttpCode.OK)
+      .cookie('auth.token', token, {
+        ...cookieOptions,
+        maxAge: expiresIn.asMilliseconds,
       })
-      .json({
-        status: 200,
-        message: 'Sign out successfully',
-      })
+      .clearCookie('auth.state', { path: '/' })
+      .clearCookie('auth.code', { path: '/' })
+      .clearCookie('auth.redirect', { path: '/' })
+      .redirect(cookies['auth.redirect'] ?? '/')
   }
+}
+
+const cookieOptions = {
+  path: '/',
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
 }

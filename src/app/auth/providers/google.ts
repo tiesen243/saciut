@@ -1,5 +1,6 @@
 import type { OAuth2Token, OauthAccount } from '@/app/auth/lib/types'
 import BaseProvider, { OAuthClient } from '@/app/auth/providers/base'
+import { HttpError } from '@/common/utils/http'
 
 export default class Google extends BaseProvider {
   private client: OAuthClient
@@ -46,7 +47,9 @@ export default class Google extends BaseProvider {
     )
     if (!tokenResponse.ok) {
       const error = await tokenResponse.text().catch(() => 'Unknown error')
-      throw new Error(`Google API error: ${error}`)
+      throw new HttpError('BAD_REQUEST', {
+        message: `Failed to fetch access token: ${error}`,
+      })
     }
 
     const tokenData = (await tokenResponse.json()) as OAuth2Token
@@ -55,7 +58,9 @@ export default class Google extends BaseProvider {
     })
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unknown error')
-      throw new Error(`Google API error (${response.status}): ${errorText}`)
+      throw new HttpError('BAD_REQUEST', {
+        message: `Failed to fetch user data: ${errorText}`,
+      })
     }
 
     const userData = (await response.json()) as GoogleUserResponse

@@ -2,6 +2,11 @@ import * as z from 'zod'
 
 export const CookiesSchema = z.object({
   'auth.token': z.string().startsWith('ey').optional(),
+
+  // OAuth
+  'auth.state': z.string().optional(),
+  'auth.code': z.string().optional(),
+  'auth.redirect': z.string().optional(),
 })
 export type CookiesType = z.infer<typeof CookiesSchema>
 
@@ -35,6 +40,8 @@ export const OAuthParamsSchema = z.object({
 export type OAuthParamsType = z.infer<typeof OAuthParamsSchema>
 
 export const OAuthQuerySchema = z.object({
+  state: z.string().optional(),
+  code: z.string().optional(),
   redirect_uri: z.string().optional(),
 })
 export type OAuthQueryType = z.infer<typeof OAuthQuerySchema>

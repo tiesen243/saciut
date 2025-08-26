@@ -7,7 +7,7 @@ export function createRouteHandler(
   controller: Type,
   methodName: string,
 ): RequestHandler {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     const params = getParams(controller, methodName)
     const args: unknown[] = []
 
@@ -51,7 +51,7 @@ export function createRouteHandler(
     })
 
     if (res.headersSent) return
-    ;(controller[methodName as keyof Type] as RequestHandler)(
+    await (controller[methodName as keyof Type] as RequestHandler)(
       ...(args as Parameters<RequestHandler>),
     )
   }
