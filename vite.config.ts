@@ -18,19 +18,9 @@ export default defineConfig({
     copyPublicDir: false,
     emptyOutDir: true,
     manifest: true,
-    rollupOptions: {
-      input: getInput(),
-      output: {
-        assetFileNames(chunkInfo) {
-          const fileName = chunkInfo.originalFileNames.at(0) ?? ''
-          if (/\.(css|scss|sass|less)$/.test(fileName))
-            return 'css/[name]-[hash][extname]'
-          return '[name]-[hash][extname]'
-        },
-        entryFileNames: 'js/[name][hash].js',
-        chunkFileNames: 'js/[name][hash].js',
-      },
-    },
+    assetsDir: '.',
+    modulePreload: { resolveDependencies: (dep) => [`build/${dep}`] },
+    rollupOptions: { input: getInput() },
   },
 })
 
