@@ -36,7 +36,9 @@ export async function registerRoutes(app: Express, App: Type) {
       routes.map((route) => {
         const handler = createRouteHandler(controller, String(route.name))
         const method = route.method.toLowerCase() as Method
-        const path = `${prefix}${route.path}`.replace(/\/+/g, '/')
+        const path = `${prefix}${route.path}`
+          .replace(/\/+/g, '/')
+          .replace(/(.+)\/$/, '$1')
 
         const middlewares: RequestHandler[] = []
         const guards = getGuards(controller, route.name)

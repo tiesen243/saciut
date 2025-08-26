@@ -17,12 +17,12 @@ export default class AuthService {
   async getUser(
     id: string,
   ): Promise<typeof this.drizzleService.schema.users.$inferSelect> {
-    const { db, schema } = this.drizzleService
+    const {
+      db,
+      schema: { users },
+    } = this.drizzleService
 
-    const [user] = await db
-      .select()
-      .from(schema.users)
-      .where(eq(schema.users.id, id))
+    const [user] = await db.select().from(users).where(eq(users.id, id))
     if (!user) throw new HttpError('NOT_FOUND', { message: 'User not found' })
 
     return user

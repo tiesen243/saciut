@@ -15,7 +15,6 @@ import {
 
 import type {
   CookiesType,
-  OAuthParamsType,
   OAuthQueryType,
   SignInType,
   SignUpType,
@@ -24,7 +23,6 @@ import JwtGuard from '@/app/auth/auth.jwt'
 import { authConfig } from '@/app/auth/auth.module'
 import {
   CookiesSchema,
-  OAuthParamsSchema,
   OAuthQuerySchema,
   SignInSchema,
   SignUpSchema,
@@ -101,15 +99,15 @@ export default class AuthController {
 
   @Get('/:provider')
   async oauthRedirect(
-    @Param(OAuthParamsSchema) params: OAuthParamsType,
+    @Param() param: { provider: string },
     @Query(OAuthQuerySchema) query: OAuthQueryType,
     @Res() res: Response,
   ) {
     const { providers } = authConfig
-    if (!(params.provider in providers))
+    if (!(param.provider in providers))
       throw new HttpError('BAD_REQUEST', { message: 'Provider not supported' })
 
-    const provider = providers[params.provider as keyof typeof providers]
+    const provider = providers[param.provider as keyof typeof providers]
     const state = generateStateOrCode()
     const codeVerifier = generateStateOrCode()
     const redirectUrl = query.redirect_uri ?? '/'
@@ -128,7 +126,7 @@ export default class AuthController {
 
   @Get('/callback/:provider')
   async oauthCallback(
-    @Param(OAuthParamsSchema) params: OAuthParamsType,
+    @Param() params: { provider: string },
     @Query(OAuthQuerySchema) query: OAuthQueryType,
     @Cookies(CookiesSchema) cookies: CookiesType,
     @Res() res: Response,

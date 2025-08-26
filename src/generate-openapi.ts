@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import { createDocument } from 'zod-openapi'
 
 import { authOpenAPISpec } from '@/app/auth/auth.openapi'
+import { postOpenAPISpec } from '@/app/post/post.openapi'
 
 async function build() {
   const start = performance.now()
@@ -12,9 +13,13 @@ async function build() {
       title: 'Scaciut API',
       version: '1.0.0',
     },
-    tags: [{ name: 'Auth', description: 'Authentication related endpoints' }],
+    tags: [
+      { name: 'Auth', description: 'Authentication related endpoints' },
+      { name: 'Posts', description: 'Post management endpoints' },
+    ],
     paths: {
       ...authOpenAPISpec,
+      ...postOpenAPISpec,
     },
   })
 

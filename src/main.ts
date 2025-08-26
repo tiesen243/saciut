@@ -23,7 +23,7 @@ async function bootstrap() {
   app.use(express.urlencoded({ extended: true }))
   app.use(express.static('public'))
   app.use(morgan('dev'))
-  app.use('/docs', apiReference({ theme: 'elysiajs', url: '/openapi.json' }))
+  app.use('/docs', apiReference({ theme: 'bluePlanet', url: '/openapi.json' }))
 
   app.useAfter(errorHandler)
   app.useAfter(renderClient)

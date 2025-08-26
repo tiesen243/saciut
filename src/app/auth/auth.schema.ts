@@ -34,11 +34,6 @@ export const SignUpSchema = SignInSchema.extend({
 })
 export type SignUpType = z.infer<typeof SignUpSchema>
 
-export const OAuthParamsSchema = z.object({
-  provider: z.string().min(1),
-})
-export type OAuthParamsType = z.infer<typeof OAuthParamsSchema>
-
 export const OAuthQuerySchema = z.object({
   state: z.string().optional(),
   code: z.string().optional(),

@@ -1,5 +1,5 @@
 import type { ZodOpenApiPathsObject } from 'zod-openapi'
-import z from 'zod'
+import * as z from 'zod/v4'
 
 import { SignInSchema, SignUpSchema, UserSchema } from '@/app/auth/auth.schema'
 
