@@ -15,7 +15,6 @@
     "dev:vite": "vite dev",
     "format": "prettier --check src resources --cache --cache-location .cache/prettier",
     "format:fix": "prettier --check src resources --write --cache --cache-location .cache/prettier",
-    "postinstall": "npm run build",
     "lint": "eslint . --cache --cache-location .cache/eslint",
     "lint:fix": "eslint . --fix --cache --cache-location .cache/eslint",
     "start": "cross-env NODE_ENV=production node --env-file-if-exists=.env ./dist/main.js",
