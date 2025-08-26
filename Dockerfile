@@ -20,5 +20,4 @@ COPY --from=builder /build/dist/main.js ./dist/main.js
 COPY --from=builder /build/resources/views ./resources/views
 COPY --from=builder /build/public ./public
 
-ENV NODE_ENV=production
 CMD ["bun", "run", "start"]
