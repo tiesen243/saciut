@@ -1,16 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "bun run build",
-  "builds": [
-    {
-      "src": "dist/main.js",
-      "use": "@vercel/node"
+  "build": { "env": { "NODE_ENV": "production" } },
+  "functions": {
+    "dist/main.js": {
+      "runtime": "nodejs20.x"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "dist/main.js"
-    }
-  ]
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": "/dist/main.js" }],
+  "outputDirectory": "dist"
 }
