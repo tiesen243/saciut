@@ -2,8 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "bun run build",
   "functions": {
-    "dist/main.js": {
-      "runtime": "@vercel/node@22.x"
-    }
+    "dist/main.js": {}
   }
 }
