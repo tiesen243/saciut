@@ -20,11 +20,11 @@ export default defineConfig({
     manifest: true,
     assetsDir: '.',
     modulePreload: { resolveDependencies: (dep) => [`build/${dep}`] },
-    rollupOptions: { input: getInput() },
+    rollupOptions: { input: getInputs() },
   },
 })
 
-function getInput() {
+function getInputs() {
   const inputs: Record<string, string> = {}
 
   function scan(dir: string, exts: string[]) {
