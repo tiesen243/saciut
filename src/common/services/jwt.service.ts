@@ -3,9 +3,11 @@ import { jwtVerify, SignJWT } from 'jose'
 
 import { Injectable } from '@/core'
 
+import { env } from '@/common/utils/env'
+
 @Injectable()
 export default class JwtService {
-  private secret = process.env.AUTH_SECRET ?? ''
+  private secret = env.AUTH_SECRET
   private alg = 'HS256'
 
   async sign(payload: JWTPayload, expiresIn = '1h'): Promise<string | null> {

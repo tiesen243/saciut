@@ -1,5 +1,6 @@
 import type { OauthAccount } from '@/app/auth/lib/types'
 import { generateCodeChallenge } from '@/app/auth/lib/crypto'
+import { env } from '@/common/utils/env'
 
 export default abstract class BaseProvider {
   public abstract createAuthorizationUrl(
@@ -13,12 +14,8 @@ export default abstract class BaseProvider {
   ): Promise<OauthAccount>
 
   protected createCallbackUrl(provider: string) {
-    let baseUrl = `http://localhost:${process.env.PORT ?? 3000}`
-    if (process.env.VERCEL_PROJECT_PRODUCTION_URL)
-      baseUrl = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    else if (process.env.VERCEL_URL)
-      baseUrl = `https://${process.env.VERCEL_URL}`
-
+    let baseUrl = `http://localhost:${env.PORT}`
+    if (env.APP_URL) baseUrl = `https://${env.APP_URL}`
     return `${baseUrl}/api/auth/callback/${provider}`
   }
 }

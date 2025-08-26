@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from 'express'
 
+import { env } from '@/common/utils/env'
 import { HttpError } from '@/common/utils/http'
 
 export function errorHandler(
@@ -8,20 +9,23 @@ export function errorHandler(
   res: Response,
   _next: NextFunction,
 ) {
-  if (process.env.NODE_ENV !== 'production')
+  if (env.NODE_ENV === 'development')
     console.error(
       `[${req.method} ${req.path}]`,
       error instanceof Error ? (error.stack ?? error.message) : error,
     )
 
   const statusCode = error instanceof HttpError ? error.statusCode : 500
-  const message =
-    error instanceof Error ? error.message : 'Internal Server Error'
-  const details =
-    error instanceof HttpError
-      ? error.details
-      : error instanceof Error
-        ? error.stack
-        : undefined
+
+  let message = 'Internal Server Error'
+  if (error instanceof HttpError) message = error.message
+  else if (error instanceof Error && env.NODE_ENV === 'development')
+    message = error.message
+
+  let details = undefined
+  if (error instanceof HttpError) details = error.details
+  else if (error instanceof Error && env.NODE_ENV === 'development')
+    details = error.stack
+
   res.status(statusCode).json({ status: statusCode, message, details })
 }

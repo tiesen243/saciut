@@ -12,12 +12,12 @@ import { HttpError } from '@/common/utils/http'
 export default class AuthService {
   private readonly password = new Password()
 
-  constructor(private readonly drizzle: DrizzleService) {}
+  constructor(private readonly drizzleService: DrizzleService) {}
 
   async getUser(
     id: string,
-  ): Promise<typeof this.drizzle.schema.users.$inferSelect> {
-    const { db, schema } = this.drizzle
+  ): Promise<typeof this.drizzleService.schema.users.$inferSelect> {
+    const { db, schema } = this.drizzleService
 
     const [user] = await db
       .select()
@@ -32,7 +32,7 @@ export default class AuthService {
     const {
       db,
       schema: { accounts, users },
-    } = this.drizzle
+    } = this.drizzleService
 
     const [existingUser] = await db
       .select({ id: users.id })
@@ -72,7 +72,7 @@ export default class AuthService {
     const {
       db,
       schema: { accounts, users },
-    } = this.drizzle
+    } = this.drizzleService
 
     const [user] = await db
       .select({ id: users.id, password: accounts.password })
@@ -103,9 +103,9 @@ export default class AuthService {
     const { provider, accountId, ...userData } = data
     const {
       schema: { accounts, users },
-    } = this.drizzle
+    } = this.drizzleService
 
-    return await this.drizzle.db.transaction(async (tx) => {
+    return await this.drizzleService.db.transaction(async (tx) => {
       const [existingAccount] = await tx
         .select()
         .from(accounts)

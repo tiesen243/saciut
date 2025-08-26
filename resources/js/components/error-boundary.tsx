@@ -26,7 +26,7 @@ export function ErrorBoundary() {
     <main className="flex min-h-dvh flex-col items-center justify-center gap-4">
       <div className="container flex items-center justify-center gap-4">
         <h1 className="text-4xl font-bold">{message}</h1>
-        <div className="bg-border h-12 w-[1px]" />
+        <div className="h-12 w-[1px] bg-border" />
         <p>{details}</p>
       </div>
       {stack && (

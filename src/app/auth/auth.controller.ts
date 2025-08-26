@@ -32,6 +32,7 @@ import {
 import AuthService from '@/app/auth/auth.service'
 import { generateStateOrCode } from '@/app/auth/lib/crypto'
 import JwtService from '@/common/services/jwt.service'
+import { env } from '@/common/utils/env'
 import { HttpCode, HttpError } from '@/common/utils/http'
 
 @Controller('/api/auth')
@@ -174,6 +175,6 @@ export default class AuthController {
 const cookieOptions = {
   path: '/',
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
+  secure: env.NODE_ENV === 'production',
   sameSite: 'lax' as const,
 }

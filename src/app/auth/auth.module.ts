@@ -4,6 +4,7 @@ import AuthController from '@/app/auth/auth.controller'
 import JwtGuard from '@/app/auth/auth.jwt'
 import AuthService from '@/app/auth/auth.service'
 import Google from '@/app/auth/providers/google'
+import { env } from '@/common/utils/env'
 
 @Module({
   controllers: [AuthController],
@@ -18,8 +19,8 @@ export const authConfig = {
   },
   providers: {
     google: new Google({
-      clientId: process.env.AUTH_GOOGLE_ID ?? '',
-      clientSecret: process.env.AUTH_GOOGLE_SECRET ?? '',
+      clientId: env.AUTH_GOOGLE_ID,
+      clientSecret: env.AUTH_GOOGLE_SECRET,
     }),
   },
 }

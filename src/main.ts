@@ -7,6 +7,7 @@ import morgan from 'morgan'
 import { createApp } from '@/core'
 
 import AppModule from '@/app/app.module'
+import { env } from '@/common/utils/env'
 import { errorHandler } from '@/common/utils/error-handle'
 import { renderClient } from '@/common/utils/render-client'
 
@@ -27,7 +28,7 @@ async function bootstrap() {
   app.useAfter(errorHandler)
   app.useAfter(renderClient)
 
-  await app.listen(3000)
+  await app.listen(env.PORT)
 }
 
 void bootstrap()

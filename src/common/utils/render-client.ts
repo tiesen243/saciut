@@ -1,6 +1,8 @@
 import fs from 'node:fs'
 import type { NextFunction, Request, Response } from 'express'
 
+import { env } from '@/common/utils/env'
+
 const VITE_URL = 'http://[::0]:5173'
 
 export function renderClient(_req: Request, res: Response, next: NextFunction) {
@@ -10,12 +12,12 @@ export function renderClient(_req: Request, res: Response, next: NextFunction) {
   }
 
   const viteClient =
-    process.env.NODE_ENV === 'development'
+    env.NODE_ENV === 'development'
       ? `<script type="module" src="${VITE_URL}/@vite/client"></script>`
       : ''
 
   const viteReactRefresh =
-    process.env.NODE_ENV === 'development'
+    env.NODE_ENV === 'development'
       ? /* HTML */ `<script type="module">
           import RefreshRuntime from '${VITE_URL}/@react-refresh'
 
@@ -27,7 +29,7 @@ export function renderClient(_req: Request, res: Response, next: NextFunction) {
       : ''
 
   function vite(files: string[]) {
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       return files
         .map((file) => {
           if (/\.(css|scss|sass|less|styl)$/.test(file))

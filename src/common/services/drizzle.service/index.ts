@@ -2,11 +2,12 @@ import { drizzle } from 'drizzle-orm/node-postgres'
 
 import { Injectable } from '@/core'
 
+import { env } from '@/common/utils/env'
 import * as schema from './schema'
 
 @Injectable()
 export default class DrizzleService {
-  private connectionString = `postgresql://${process.env.DB_USER}:${encodeURIComponent(process.env.DB_PASSWORD ?? '')}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?schema=public`
+  private connectionString = `postgresql://${env.DB_USER}:${encodeURIComponent(env.DB_PASSWORD)}@${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}?schema=public`
   private instance
 
   constructor() {
