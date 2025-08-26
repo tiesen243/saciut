@@ -10,6 +10,7 @@ export class HttpError extends Error {
     },
   ) {
     super(options.message)
+    this.name = 'HttpError'
     this.statusCode = HttpErrorStatus[statusCode]
     this.details = options.details
   }

@@ -8,4 +8,9 @@ export default class AppController {
   index(@Res() res: Response): void {
     res.render('index')
   }
+
+  @Get('/protected')
+  protected(@Res() res: Response): void {
+    res.json({ message: 'You have accessed a protected route!' })
+  }
 }

@@ -1,4 +1,4 @@
-import type { Express } from 'express'
+import type { Express, RequestHandler } from 'express'
 
 import type { Method, Type } from '@/core/decorators/types'
 import { Container } from '@/core/container'
@@ -8,7 +8,12 @@ import {
   getProviders,
 } from '@/core/decorators/metadata'
 import { getRoutes } from '@/core/decorators/method'
+import { isGuarded } from '@/core/guard/decorator'
+import { createJwtGuard } from '@/core/guard/jwt'
 import { createRouteHandler } from '@/core/route-handler'
+
+import AuthService from '@/app/auth/auth.service'
+import JwtService from '@/common/services/jwt.service'
 
 export async function registerRoutes(app: Express, App: Type) {
   const controllers = getControllers(App)
@@ -36,6 +41,14 @@ export async function registerRoutes(app: Express, App: Type) {
         const handler = createRouteHandler(controller, String(route.name))
         const method = route.method.toLowerCase() as Method
         const path = `${prefix}${route.path}`.replace(/\/+/g, '/')
+
+        // const middlewares: RequestHandler[] = []
+        // if (isGuarded(controller, route.name)) {
+        //   const jwt = container.resolve(JwtService)
+        //   const authService = container.resolve(AuthService)
+        //   middlewares.push(createJwtGuard(jwt, authService))
+        // }
+
         app[method](path, handler)
       }),
     )
