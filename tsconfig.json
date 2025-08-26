@@ -50,7 +50,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@js/*": ["resources/js/*"]
+      "@client/*": ["resources/js/*"]
     }
   },
   "include": ["src", "resources/js"],

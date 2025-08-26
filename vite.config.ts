@@ -9,7 +9,7 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '@js': path.resolve(__dirname, 'resources/js'),
+      '@client': path.resolve(__dirname, 'resources/js'),
     },
   },
 

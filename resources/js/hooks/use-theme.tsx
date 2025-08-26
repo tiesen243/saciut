@@ -11,11 +11,13 @@ interface ThemeProviderProps {
 interface ThemeProviderState {
   theme: Theme
   setTheme: (theme: Theme) => void
+  toggleTheme: () => void
 }
 
 const initialState: ThemeProviderState = {
   theme: 'system',
   setTheme: () => null,
+  toggleTheme: () => null,
 }
 
 const ThemeProviderContext = React.createContext<ThemeProviderState | null>(
@@ -80,6 +82,15 @@ export function ThemeProvider({
     () => ({
       theme,
       setTheme: (theme: Theme) => {
+        const restoreAnimation = disableAnimation(
+          document.querySelector('style[nonce]')?.getAttribute('nonce') ?? null,
+        )
+        localStorage.setItem(storageKey, theme)
+        setTheme(theme)
+        restoreAnimation()
+      },
+      toggleTheme: () => {
+        const theme = value.theme === 'dark' ? 'light' : 'dark'
         const restoreAnimation = disableAnimation(
           document.querySelector('style[nonce]')?.getAttribute('nonce') ?? null,
         )

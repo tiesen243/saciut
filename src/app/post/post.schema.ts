@@ -23,6 +23,7 @@ export const PostSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 })
+export type PostType = z.infer<typeof PostSchema>
 
 export const StorePostSchema = z.object({
   id: z
