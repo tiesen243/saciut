@@ -5,6 +5,7 @@ node_modules
 out
 dist
 public/build
+public/openapi.json
 *.tgz
 
 # code coverage
