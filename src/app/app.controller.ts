@@ -1,19 +1,11 @@
 import type { Response } from 'express'
 
-import { Controller, Get, Guard, Res } from '@/core'
-
-import JwtGuard from '@/app/auth/auth.jwt'
+import { Controller, Get, Res } from '@/core'
 
 @Controller()
 export default class AppController {
-  @Get('/')
-  index(@Res() res: Response): void {
-    res.render('index')
-  }
-
-  @Get('/protected')
-  @Guard(JwtGuard)
-  protected(@Res() res: Response): void {
-    res.json({ message: 'You have accessed a protected route!' })
+  @Get('/api/health')
+  health(@Res() res: Response) {
+    return res.status(200).json({ status: 'ok' })
   }
 }

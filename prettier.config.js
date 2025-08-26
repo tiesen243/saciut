@@ -1,7 +1,10 @@
 /** @typedef {import("prettier").Config} PrettierConfig */
 /** @typedef {import("@ianvs/prettier-plugin-sort-imports").PluginConfig} SortImportsConfig */
+/** @typedef {import("prettier-plugin-tailwindcss").PluginOptions} TailwindConfig */
 
-/** @type { PrettierConfig | SortImportsConfig } */
+import { fileURLToPath } from 'node:url'
+
+/** @type { PrettierConfig | SortImportsConfig | TailwindConfig } */
 const config = {
   /* General Prettier Config */
   semi: false,
@@ -10,7 +13,16 @@ const config = {
   singleQuote: true,
   trailingComma: 'all',
 
-  plugins: ['@ianvs/prettier-plugin-sort-imports', 'prettier-plugin-ejs'],
+  plugins: [
+    '@ianvs/prettier-plugin-sort-imports',
+    'prettier-plugin-tailwindcss',
+  ],
+
+  tailwindFunctions: ['cn', 'cva'],
+  tailwindAttributes: ['className', 'tw'],
+  tailwindStylesheet: fileURLToPath(
+    new URL('resources/css/globals.css', import.meta.url),
+  ),
 
   importOrder: [
     '<TYPES>',

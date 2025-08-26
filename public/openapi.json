@@ -13,9 +13,7 @@
   "paths": {
     "/api/auth/get-session": {
       "get": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "Get current user session",
         "description": "Retrieve the current user session based on the provided token.",
         "responses": {
@@ -56,20 +54,11 @@
                           "type": "string"
                         }
                       },
-                      "required": [
-                        "id",
-                        "name",
-                        "email",
-                        "createdAt"
-                      ],
+                      "required": ["id", "name", "email", "createdAt"],
                       "additionalProperties": false
                     }
                   },
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
+                  "required": ["status", "message", "data"],
                   "additionalProperties": false
                 }
               }
@@ -94,11 +83,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "status",
-                    "message",
-                    "details"
-                  ],
+                  "required": ["status", "message", "details"],
                   "additionalProperties": false
                 }
               }
@@ -109,9 +94,7 @@
     },
     "/api/auth/sign-up": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "Register a new user",
         "description": "Create a new user account with the provided details.",
         "requestBody": {
@@ -136,11 +119,7 @@
                     "maxLength": 100
                   }
                 },
-                "required": [
-                  "email",
-                  "password",
-                  "name"
-                ]
+                "required": ["email", "password", "name"]
               }
             }
           }
@@ -170,17 +149,11 @@
                           "pattern": "^[0-9a-z]+$"
                         }
                       },
-                      "required": [
-                        "userId"
-                      ],
+                      "required": ["userId"],
                       "additionalProperties": false
                     }
                   },
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
+                  "required": ["status", "message", "data"],
                   "additionalProperties": false
                 }
               }
@@ -205,11 +178,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "status",
-                    "message",
-                    "details"
-                  ],
+                  "required": ["status", "message", "details"],
                   "additionalProperties": false
                 }
               }
@@ -220,9 +189,7 @@
     },
     "/api/auth/sign-in": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "Authenticate a user",
         "description": "Authenticate a user and return a JWT token.",
         "requestBody": {
@@ -242,10 +209,7 @@
                     "pattern": "^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_\\-+=[\\]{};':\"\\\\|,.<>/?]).{8,}$"
                   }
                 },
-                "required": [
-                  "email",
-                  "password"
-                ]
+                "required": ["email", "password"]
               }
             }
           }
@@ -279,18 +243,11 @@
                           "pattern": "^ey.*"
                         }
                       },
-                      "required": [
-                        "userId",
-                        "token"
-                      ],
+                      "required": ["userId", "token"],
                       "additionalProperties": false
                     }
                   },
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
+                  "required": ["status", "message", "data"],
                   "additionalProperties": false
                 }
               }
@@ -315,11 +272,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "status",
-                    "message",
-                    "details"
-                  ],
+                  "required": ["status", "message", "details"],
                   "additionalProperties": false
                 }
               }
@@ -330,9 +283,7 @@
     },
     "/api/auth/sign-out": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "Sign out the current user",
         "description": "Invalidate the current user session.",
         "responses": {
@@ -352,10 +303,7 @@
                       "const": "Sign out successfully"
                     }
                   },
-                  "required": [
-                    "status",
-                    "message"
-                  ],
+                  "required": ["status", "message"],
                   "additionalProperties": false
                 }
               }
