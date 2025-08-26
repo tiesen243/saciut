@@ -21,8 +21,9 @@ export default class PostService {
         id: posts.id,
         title: posts.title,
         content: posts.content,
-        createdAt: posts.createdAt,
         author: { id: users.id, name: users.name },
+        createdAt: posts.createdAt,
+        updatedAt: posts.updatedAt,
       })
       .from(posts)
       .orderBy(desc(posts.createdAt))
@@ -46,8 +47,9 @@ export default class PostService {
         id: posts.id,
         title: posts.title,
         content: posts.content,
-        createdAt: posts.createdAt,
         author: { id: users.id, name: users.name },
+        createdAt: posts.createdAt,
+        updatedAt: posts.updatedAt,
       })
       .from(posts)
       .innerJoin(users, eq(posts.authorId, users.id))
