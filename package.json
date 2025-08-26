@@ -4,13 +4,13 @@
   "type": "module",
   "scripts": {
     "build": "tsdown",
-    "dev": "tsdown --watch --logLevel silent --on-success \"clear && NODE_ENV=development node --env-file-if-exists=.env ./dist/main.js\"",
+    "dev": "tsdown --watch --logLevel silent --on-success \"clear && cross-env NODE_ENV=development node --env-file-if-exists=.env ./dist/main.js\"",
     "gen:openapi": "tsdown --entry ./src/generate-openapi.ts --on-success \"node ./dist/generate-openapi.js\"",
     "format": "prettier --check . --cache --cache-location .cache/prettier",
     "format:fix": "prettier --check . --write --cache --cache-location .cache/prettier",
     "lint": "eslint . --cache --cache-location .cache/eslint",
     "lint:fix": "eslint . --fix --cache --cache-location .cache/eslint",
-    "start": "NODE_ENV=production node --env-file-if-exists=.env ./dist/main.js",
+    "start": "cross-env NODE_ENV=production node --env-file-if-exists=.env ./dist/main.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -34,6 +34,7 @@
     "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.3.0",
+    "cross-env": "^10.0.0",
     "drizzle-kit": "^0.31.4",
     "eslint-plugin-import": "^2.32.0",
     "pg": "^8.16.3",

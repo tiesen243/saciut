@@ -43,11 +43,7 @@ export default class AuthController {
 
   @Get('/get-session')
   @Guard(JwtGuard)
-  getSession(
-    @Query(SignInSchema) query: SignInType,
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
+  getSession(@Req() req: Request, @Res() res: Response) {
     res.status(HttpCode.OK).json({
       status: HttpCode.OK,
       message: 'Get session successfully',
