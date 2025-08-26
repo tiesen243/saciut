@@ -1,28 +1,32 @@
 # saciut
 
-**saciut** is a modular TypeScript server application framework built on top of [Express](https://expressjs.com/). It encourages dependency injection, modular design, and clear separation of concerns, drawing inspiration from frameworks like NestJS.
+**saciut** is a modular TypeScript server application framework built on top of [Express](https://expressjs.com). It is designed to provide a scalable and maintainable architecture for backend applications, emphasizing modularity, dependency injection, and ease of use.
 
-## Features
+## Key Features
 
-- **Dependency Injection**: Easily manage complex dependencies using decorators like `@Injectable`, `@Controller`, and `@Module`.
-- **Modular Architecture**: Organize your code into modules for scalability and maintainability.
-- **Express Middleware**: Out-of-the-box support for popular middleware such as CORS, cookie parsing, static files, and logging with Morgan.
-- **Type-safe Routing**: Use decorators (`@Get`, `@Post`, etc.) for type-safe, declarative routing.
-- **Validation**: Parameter decorators support request validation with [zod](https://zod.dev/).
-- **Database Ready**: Example integration with `drizzle-orm` for PostgreSQL.
-- **View Rendering**: Supports EJS view templates.
+- **Modular Architecture**: Organize your codebase in a clean and scalable way using modules, controllers, and services.
+- **Dependency Injection**: Simplifies management of dependencies, promoting testability and flexibility.
+- **Express Integration**: Leverages the power and familiarity of Express, with added structure for large applications.
+- **First-Class TypeScript Support**: Built with TypeScript for type safety and modern development experience.
+- **EJS View Support**: Easily render dynamic HTML using EJS templates.
+- **Database Ready**: Example integration with `drizzle-orm` for working with PostgreSQL databases.
+- **Modern Frontend Tools**: Designed to work well with frontend frameworks like React, Vite, and TailwindCSS.
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Bun v1.2.20+](https://bun.com)
-- Node.js 18+ (for development tools)
-- PostgreSQL (if using database services)
+- [Node.js](https://nodejs.org/) v20 or newer
+- [PostgreSQL](https://www.postgresql.org/) (if using database features)
 
 ### Installation
 
+Clone the repository and install dependencies:
+
 ```bash
+git clone https://github.com/tiesen243/saciut.git
+cd saciut
+
 npm install
 # or
 yarn install
@@ -34,13 +38,9 @@ bun install
 
 ### Configuration
 
-Create a `.env` file based on the provided example:
+Create an `.env` file in the project root to set environment variables (see `.env.example` for reference).
 
-```bash
-cp .env.example .env
-```
-
-### Running the App
+### Running the Development Server
 
 ```bash
 npm run dev
@@ -52,53 +52,18 @@ pnpm dev
 bun dev
 ```
 
-The default server will start on [http://localhost:3000](http://localhost:3000).
+### Building for Production
 
-### Example Structure
-
-- `src/core/`: Core decorators and dependency injection container.
-- `src/app/`: Application modules, controllers, and services.
-- `src/common/`: Shared utilities and types.
-- `views/`: EJS view templates.
-- `public/`: Static files.
-
-### Example Usage
-
-**Defining a Module and Controller:**
-
-```typescript
-import type { Response } from 'express'
-
-import { Controller, Get, Module, Res } from '@/core'
-
-@Controller('/auth')
-class AuthController {
-  @Get('/status')
-  getStatus(@Res() res: Response) {
-    res.json({ status: 'ok', timestamp: Date.now() })
-  }
-}
-
-@Module({
-  controllers: [AuthController],
-  providers: [],
-})
-class AuthModule {}
+```bash
+npm run build
+# or
+yarn build 
+# or
+pnpm build
+# or
+bun run build
 ```
 
-**Bootstrap the application:**
-
-```typescript
-import { createApp } from '@/core'
-
-import AuthModule from '@/app/auth/auth.module'
-
-async function bootstrap() {
-  const app = await createApp(AuthModule)
-  await app.listen(3000)
-}
-void bootstrap()
-```
 
 ## License
 
