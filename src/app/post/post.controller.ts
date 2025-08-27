@@ -45,7 +45,7 @@ export default class PostController {
   }
 
   @Get('/:id')
-  async getPostById(
+  async getPost(
     @Param(FindOneSchema) param: FindOneType,
     @Res() res: Response,
   ): Promise<void> {
@@ -79,12 +79,11 @@ export default class PostController {
     @Req() req: { user: { id: string } },
     @Res() res: Response,
   ): Promise<void> {
-    await this.postService.delete(param.id, req.user.id)
-
+    const post = await this.postService.deleteOne(param.id, req.user.id)
     res.status(HttpCode.OK).json({
       status: HttpCode.OK,
       message: 'Post deleted successfully',
-      data: null,
+      data: post,
     })
   }
 }

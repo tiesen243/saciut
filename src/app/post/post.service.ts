@@ -83,7 +83,7 @@ export default class PostService {
     return post
   }
 
-  async delete(id: string, authorId: string) {
+  async deleteOne(id: string, authorId: string) {
     const {
       db,
       schema: { posts },
@@ -96,5 +96,6 @@ export default class PostService {
       })
 
     await db.delete(posts).where(eq(posts.id, id))
+    return null
   }
 }

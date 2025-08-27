@@ -11,7 +11,7 @@
     "moduleResolution": "bundler",
     "target": "esnext",
     "lib": ["esnext", "dom", "dom.iterable"],
-    "types": ["node"],
+    "types": ["node", "express"],
 
     "allowJs": true,
     "checkJs": true,
