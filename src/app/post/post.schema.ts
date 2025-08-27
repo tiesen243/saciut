@@ -12,19 +12,6 @@ export const FindOneSchema = z.object({
 })
 export type FindOneType = z.infer<typeof FindOneSchema>
 
-export const PostSchema = z.object({
-  id: z.cuid2(),
-  title: z.string().min(1).max(255),
-  content: z.string().min(1),
-  author: z.object({
-    id: z.cuid2(),
-    name: z.string().min(2).max(100),
-  }),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-})
-export type PostType = z.infer<typeof PostSchema>
-
 export const StorePostSchema = z.object({
   id: z
     .cuid2()

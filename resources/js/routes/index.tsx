@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Trash2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 
-import type { PostType } from '@/app/post/post.schema'
+import type { Outputs } from '@/types'
 import { StorePostSchema } from '@/app/post/post.schema'
 import { postFilters, postOptions } from '@client/api/post'
 import { Button } from '@client/components/ui/button'
@@ -16,27 +16,12 @@ import {
 } from '@client/components/ui/card'
 import { useForm } from '@client/components/ui/form'
 import { Input } from '@client/components/ui/input'
+import { Textarea } from '@client/components/ui/textarea'
 
 export default function Index() {
-  const { data, status } = useQuery({
-    queryKey: ['health'],
-    queryFn: async () => {
-      const response = await fetch('/api/health')
-      if (!response.ok) throw new Error('Network response was not ok')
-      return (await response.json()) as { status: string; database: string }
-    },
-  })
-
   return (
     <main className="container py-4">
-      <pre className="mx-auto max-w-2xl rounded-md bg-secondary p-4 text-secondary-foreground">
-        {status === 'success'
-          ? JSON.stringify(data, null, 2)
-          : JSON.stringify({ status: status, database: 'Loading...' }, null, 2)}
-      </pre>
-
       <CreatePost />
-
       <PostList />
     </main>
   )
@@ -62,7 +47,7 @@ function CreatePost() {
 
   return (
     <form
-      className="mx-auto mt-8 grid max-w-2xl gap-4 rounded-md border bg-card p-6 text-card-foreground shadow-sm"
+      className="mt-8 grid gap-4 rounded-md border bg-card p-6 text-card-foreground shadow-sm"
       onSubmit={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -88,7 +73,7 @@ function CreatePost() {
           <div id={meta.id} className="grid gap-2">
             <form.Label>Content</form.Label>
             <form.Control {...field}>
-              <Input />
+              <Textarea placeholder="Write something..." />
             </form.Control>
             <form.Message />
           </div>
@@ -114,7 +99,9 @@ function PostList() {
   )
 }
 
-function PostCard({ post }: { post: PostType }) {
+function PostCard({
+  post,
+}: Readonly<{ post: Outputs['post']['findMany']['data'][number] }>) {
   const queryClient = useQueryClient()
 
   const { mutate, isPending } = useMutation(

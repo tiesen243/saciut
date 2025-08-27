@@ -8,6 +8,7 @@ import {
 
 import RootLayout, { ErrorBoundary, HydrateFallback } from '@client/root'
 import Index from '@client/routes'
+import AuthLayout from '@client/routes/auth/_layout'
 
 export const queryContext = unstable_createContext()
 
@@ -17,6 +18,20 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Index /> },
       { path: '/about', lazy: () => import('@client/routes/about') },
+
+      {
+        element: <AuthLayout />,
+        children: [
+          {
+            path: '/register',
+            lazy: () => import('@client/routes/auth/register'),
+          },
+          {
+            path: '/login',
+            lazy: () => import('@client/routes/auth/login'),
+          },
+        ],
+      },
     ],
 
     ErrorBoundary,

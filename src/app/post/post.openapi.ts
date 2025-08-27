@@ -4,9 +4,20 @@ import z from 'zod/v4'
 import {
   FindManySchema,
   FindOneSchema,
-  PostSchema,
   StorePostSchema,
 } from '@/app/post/post.schema'
+
+const PostSchema = z.object({
+  id: z.cuid2(),
+  title: z.string().min(1).max(255),
+  content: z.string().min(1),
+  author: z.object({
+    id: z.cuid2(),
+    name: z.string().min(2).max(100),
+  }),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
 
 export const postOpenAPISpec = {
   '/api/posts': {
@@ -116,6 +127,7 @@ export const postOpenAPISpec = {
               schema: z.object({
                 status: z.literal(200),
                 message: z.literal('Post deleted successfully'),
+                data: z.null(),
               }),
             },
           },

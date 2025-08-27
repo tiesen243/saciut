@@ -1,8 +1,8 @@
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
 import type { Inputs, Outputs } from '@/types'
-import type { MutationOptions, QueryOptions } from '@client/lib/fetch-json'
-import { fetchJson } from '@client/lib/fetch-json'
+import type { MutationOptions, QueryOptions } from '@client/lib/api'
+import { api } from '@client/lib/api'
 
 export const postFilters = {
   all: () => ({ queryKey: ['posts'] }),
@@ -18,7 +18,7 @@ export const postOptions = {
     queryOptions({
       ...options,
       ...postFilters.all(),
-      queryFn: () => fetchJson<TData>('/api/posts'),
+      queryFn: () => api.get<TData>('/api/posts'),
     }),
 
   byId: <TData extends Outputs['post']['findOne']>(
@@ -28,7 +28,7 @@ export const postOptions = {
     queryOptions({
       ...options,
       ...postFilters.byId(id),
-      queryFn: () => fetchJson<TData>(`/api/posts/${id}`),
+      queryFn: () => api.get<TData>(`/api/posts/${id}`),
       enabled: !!id,
     }),
 
@@ -39,11 +39,7 @@ export const postOptions = {
       ...options,
       ...postFilters.store(),
       mutationFn: async (post: Inputs['post']['store']) =>
-        fetchJson<TData>('/api/posts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(post),
-        }),
+        api.post<TData>('/api/posts', post),
     }),
 
   delete: <TData extends Outputs['post']['deleteOne']>(
@@ -52,9 +48,6 @@ export const postOptions = {
     mutationOptions({
       ...options,
       ...postFilters.delete(),
-      mutationFn: async (id: string) =>
-        fetchJson<TData>(`/api/posts/${id}`, {
-          method: 'DELETE',
-        }),
+      mutationFn: async (id: string) => api.delete<TData>(`/api/posts/${id}`),
     }),
 } as const

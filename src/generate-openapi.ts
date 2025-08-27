@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import { createDocument } from 'zod-openapi'
 
+import { appOpenAPISpec } from '@/app/app.openapi'
 import { authOpenAPISpec } from '@/app/auth/auth.openapi'
 import { postOpenAPISpec } from '@/app/post/post.openapi'
 
@@ -18,6 +19,7 @@ async function build() {
       { name: 'Posts', description: 'Post management endpoints' },
     ],
     paths: {
+      ...appOpenAPISpec,
       ...authOpenAPISpec,
       ...postOpenAPISpec,
     },
