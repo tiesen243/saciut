@@ -26,6 +26,7 @@ const config = {
 
   importOrder: [
     '<TYPES>',
+    '^(react/(.*)$)|^(react$)',
     '<THIRD_PARTY_MODULES>',
     '',
     '<TYPES>^@/core',
