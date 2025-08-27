@@ -4,6 +4,7 @@ import { Loader2Icon } from 'lucide-react'
 import { isRouteErrorResponse, Outlet, useRouteError } from 'react-router'
 
 import { Header } from '@client/components/header'
+import { Toaster } from '@client/components/ui/sonner'
 import { ThemeProvider } from '@client/hooks/use-theme'
 import { createQueryClient } from '@client/lib/query-client'
 
@@ -22,6 +23,8 @@ export default function RootLayout() {
         <Header />
         <Outlet />
       </QueryClientProvider>
+
+      <Toaster />
     </ThemeProvider>
   )
 }

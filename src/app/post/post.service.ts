@@ -73,7 +73,7 @@ export default class PostService {
         target: [posts.id],
         set: { ...data, authorId },
       })
-      .returning({ postId: posts.id })
+      .returning({ id: posts.id })
 
     if (!post)
       throw new HttpError('INTERNAL_SERVER_ERROR', {

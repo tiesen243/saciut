@@ -1,68 +1,60 @@
-import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
 import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
 import type { PostType, StorePostType } from '@/app/post/post.schema'
-
-type QueryOptions<TData> = Omit<UseQueryOptions<TData>, 'queryKey' | 'queryFn'>
-type MutationOptions<TVars, TData> = Omit<
-  UseMutationOptions<TData, Error, TVars>,
-  'mutationKey' | 'mutationFn'
->
+import type { MutationOptions, QueryOptions } from '@client/lib/fetch-json'
+import { fetchJson } from '@client/lib/fetch-json'
 
 export const postFilters = {
   all: () => ({ queryKey: ['posts'] }),
-  byId: (id: string) => ({ queryKey: [...postFilters.all().queryKey, id] }),
-  store: () => ({ mutationKey: [...postFilters.all().queryKey, 'store'] }),
-  delete: () => ({ mutationKey: [...postFilters.all().queryKey, 'delete'] }),
+  byId: (id: string) => ({ queryKey: ['posts', id] }),
+  store: () => ({ mutationKey: ['posts', 'store'] }),
+  delete: () => ({ mutationKey: ['posts', 'delete'] }),
 } as const
 
 export const postOptions = {
-  all: (options: QueryOptions<{ data: PostType[] }> = {}) =>
+  all: <TData extends { data: PostType[]; message: string }>(
+    options: QueryOptions<TData> = {},
+  ) =>
     queryOptions({
       ...options,
       ...postFilters.all(),
-      queryFn: async () => {
-        const response = await fetch('/api/posts')
-        if (!response.ok) throw new Error('Network response was not ok')
-        return (await response.json()) as { data: PostType[] }
-      },
+      queryFn: () => fetchJson<TData>('/api/posts'),
     }),
 
-  byId: (id: string, options: QueryOptions<{ data: PostType }> = {}) =>
+  byId: <TData extends { data: PostType; message: string }>(
+    id: string,
+    options: QueryOptions<TData> = {},
+  ) =>
     queryOptions({
       ...options,
       ...postFilters.byId(id),
-      queryFn: async () => {
-        const response = await fetch(`/api/posts/${id}`)
-        if (!response.ok) throw new Error('Network response was not ok')
-        return (await response.json()) as { data: PostType }
-      },
+      queryFn: () => fetchJson<TData>(`/api/posts/${id}`),
       enabled: !!id,
     }),
 
-  store: (options: MutationOptions<StorePostType, { data: PostType }> = {}) =>
+  store: <TData extends { data: PostType; message: string }>(
+    options: MutationOptions<StorePostType, TData> = {},
+  ) =>
     mutationOptions({
       ...options,
       ...postFilters.store(),
-      mutationFn: async (post: StorePostType) => {
-        const response = await fetch('/api/posts', {
+      mutationFn: async (post: StorePostType) =>
+        fetchJson<TData>('/api/posts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(post),
-        })
-        if (!response.ok) throw new Error('Network response was not ok')
-        return response.json() as Promise<{ data: PostType }>
-      },
+        }),
     }),
 
-  delete: (options: MutationOptions<string, { data: PostType }> = {}) =>
+  delete: <TData extends { message: string }>(
+    options: MutationOptions<string, TData> = {},
+  ) =>
     mutationOptions({
       ...options,
       ...postFilters.delete(),
-      mutationFn: async (id: string) => {
-        const response = await fetch(`/api/posts/${id}`, { method: 'DELETE' })
-        if (!response.ok) throw new Error('Network response was not ok')
-        return response.json() as Promise<{ data: PostType }>
-      },
+      mutationFn: async (id: string) =>
+        fetchJson<TData>(`/api/posts/${id}`, {
+          method: 'DELETE',
+        }),
     }),
 } as const

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Trash2Icon } from 'lucide-react'
+import { toast } from 'sonner'
 
 import type { PostType } from '@/app/post/post.schema'
 import { StorePostSchema } from '@/app/post/post.schema'
@@ -46,6 +47,7 @@ function CreatePost() {
   const { mutateAsync } = useMutation(
     postOptions.store({
       onSuccess: () => queryClient.invalidateQueries(postFilters.all()),
+      onError: (e) => toast.error(e.message),
     }),
   )
 
@@ -118,6 +120,7 @@ function PostCard({ post }: { post: PostType }) {
   const { mutate, isPending } = useMutation(
     postOptions.delete({
       onSuccess: () => queryClient.invalidateQueries(postFilters.all()),
+      onError: (e) => toast.error(e.message),
     }),
   )
 
