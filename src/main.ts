@@ -14,9 +14,6 @@ import { renderClient } from '@/common/utils/render-client'
 async function bootstrap() {
   const app = await createApp(AppModule)
 
-  app.set('view engine', 'ejs')
-  app.set('views', 'resources/views')
-
   app.use(cors())
   app.use(cookieParser())
   app.use(express.json())
