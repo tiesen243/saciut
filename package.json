@@ -6,7 +6,7 @@
     "build": "npm run build:openapi && npm run build:server && npm run build:vite",
     "build:openapi": "tsdown --entry ./src/generate-openapi.ts --on-success \"node ./dist/generate-openapi.js\"",
     "build:server": "tsdown",
-    "build:vite": "vite build",
+    "build:vite": "tsc && vite build",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.34.0",
-    "@ianvs/prettier-plugin-sort-imports": "^4.6.2",
+    "@ianvs/prettier-plugin-sort-imports": "^4.6.3",
     "@tailwindcss/vite": "^4.1.12",
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
