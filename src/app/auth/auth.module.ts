@@ -4,6 +4,7 @@ import AuthController from '@/app/auth/auth.controller'
 import JwtGuard from '@/app/auth/auth.jwt'
 import AuthService from '@/app/auth/auth.service'
 import Google from '@/app/auth/providers/google'
+import { users } from '@/common/services/drizzle.service/schema'
 import { env } from '@/common/utils/env'
 
 @Module({
@@ -23,4 +24,12 @@ export const authConfig = {
       clientSecret: env.AUTH_GOOGLE_SECRET,
     }),
   },
+}
+
+declare module '@/app/auth/lib/types' {
+  type IUser = typeof users.$inferInsert
+
+  interface User extends IUser {
+    id: string
+  }
 }

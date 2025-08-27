@@ -5,6 +5,7 @@ import { isRouteErrorResponse, Outlet, useRouteError } from 'react-router'
 
 import { Header } from '@client/components/header'
 import { Toaster } from '@client/components/ui/sonner'
+import { SessionProvider } from '@client/hooks/use-session'
 import { ThemeProvider } from '@client/hooks/use-theme'
 import { createQueryClient } from '@client/lib/query-client'
 
@@ -20,8 +21,10 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <Header />
-        <Outlet />
+        <SessionProvider>
+          <Header />
+          <Outlet />
+        </SessionProvider>
       </QueryClientProvider>
 
       <Toaster />
@@ -55,7 +58,7 @@ export function ErrorBoundary() {
     <main className="flex min-h-dvh flex-col items-center justify-center gap-4">
       <div className="container flex items-center justify-center gap-4">
         <h1 className="text-4xl font-bold">{message}</h1>
-        <div className="h-12 w-[1px] bg-border" />
+        <div className="bg-border h-12 w-[1px]" />
         <p>{details}</p>
       </div>
       {stack && (
