@@ -43,13 +43,19 @@ export default function Index() {
 
 function CreatePost() {
   const queryClient = useQueryClient()
-  const { mutateAsync } = useMutation(postOptions.store())
+  const { mutateAsync } = useMutation(
+    postOptions.store({
+      onSuccess: () => queryClient.invalidateQueries(postFilters.all()),
+    }),
+  )
 
   const form = useForm({
     defaultValues: { id: '' as string | undefined, title: '', content: '' },
     validator: StorePostSchema,
     onSubmit: mutateAsync,
-    onSuccess: () => queryClient.invalidateQueries(postFilters.all()),
+    onSuccess: () => {
+      form.reset()
+    },
   })
 
   return (
