@@ -27,7 +27,6 @@ RUN bun install --production
 
 # Copy built app and assets from builder
 COPY --from=builder /build/dist/main.js ./dist/main.js
-COPY --from=builder /build/resources/views ./resources/views
 COPY --from=builder /build/public ./public
 
 # Expose application port
