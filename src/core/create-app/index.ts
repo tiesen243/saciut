@@ -1,12 +1,12 @@
 import 'reflect-metadata'
 
-import type { ErrorRequestHandler, RequestHandler } from 'express'
+import type { Application, ErrorRequestHandler, RequestHandler } from 'express'
 import express from 'express'
 
 import { registerControllers } from '@/core/create-app/register-controller'
 
 export async function createApp(module: Type) {
-  const app = express()
+  const app: Application = express()
   const afterHandlers: (RequestHandler | ErrorRequestHandler)[] = []
 
   return Promise.resolve({

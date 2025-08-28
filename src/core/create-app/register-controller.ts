@@ -1,4 +1,4 @@
-import type { Express, RequestHandler } from 'express'
+import type { Application, RequestHandler } from 'express'
 
 import type { CanActivate } from '@/core/common/guard'
 import {
@@ -19,7 +19,7 @@ function normalizePath(path: string): string {
   return path.replace(/\/+/g, '/').replace(/\/$/, '')
 }
 
-export function registerControllers(app: Express, module: Type) {
+export function registerControllers(app: Application, module: Type) {
   const providers = getProviders(module)
   for (const Provider of providers) {
     if (!isInjectable(Provider))
