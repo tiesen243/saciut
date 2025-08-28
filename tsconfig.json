@@ -1,23 +1,19 @@
 {
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    // Basic Options
-    "incremental": true,
-    "tsBuildInfoFile": "${configDir}/.cache/tsbuildinfo.json",
-
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "preserve",
-    "moduleResolution": "bundler",
     "target": "esnext",
-    "lib": ["esnext", "dom", "dom.iterable"],
+    "moduleResolution": "bundler",
+    "lib": ["esnext"],
     "types": ["node"],
 
     // Other Outputs
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "noEmit": true,
+    "noEmit": false,
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
@@ -29,28 +25,26 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    // "noPropertyAccessFromIndexSignature": true,
+    "noPropertyAccessFromIndexSignature": true,
+
+    // Decorator Options
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
 
     // Recommended Options
     "strict": true,
-    "jsx": "preserve",
-    "verbatimModuleSyntax": false,
+    "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
 
-    // Decorators
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-
     // Path Aliases
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@client/*": ["resources/js/*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["src", "resources/js"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

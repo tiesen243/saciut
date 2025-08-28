@@ -1,25 +1,22 @@
 import type { Response } from 'express'
 
-import { Controller, Get, Res } from '@/core'
+import { Controller, Get, Guard, Res } from '@/core/common'
 
-import DrizzleService from '@/common/services/drizzle.service'
+import { AppService } from '@/app/app.service'
+import { ExampleGuard } from '@/app/example.guard'
 
 @Controller()
-export default class AppController {
-  constructor(private readonly drizzle: DrizzleService) {}
+export class AppController {
+  constructor(private readonly appService: AppService) {}
 
-  @Get('/api/health')
-  async health(@Res() res: Response) {
-    let isDatabaseConnected = true
-    try {
-      await this.drizzle.db.execute('SELECT 1')
-    } catch {
-      isDatabaseConnected = false
-    }
+  @Get('/')
+  index(@Res() res: Response) {
+    res.send(this.appService.getHello())
+  }
 
-    return res.status(200).json({
-      status: 'ok',
-      database: isDatabaseConnected ? 'connected' : 'disconnected',
-    })
+  @Get('/private')
+  @Guard(ExampleGuard)
+  private(@Res() res: Response) {
+    res.send('This is a private route')
   }
 }
