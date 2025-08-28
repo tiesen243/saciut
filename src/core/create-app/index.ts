@@ -3,21 +3,29 @@ import 'reflect-metadata'
 import type { Application, ErrorRequestHandler, RequestHandler } from 'express'
 import express from 'express'
 
+import type { Type } from '@/core/types'
 import { registerControllers } from '@/core/create-app/register-controller'
 
 export async function createApp(module: Type) {
   const app: Application = express()
+
+  const beforeHandlers: (RequestHandler | ErrorRequestHandler)[] = []
   const afterHandlers: (RequestHandler | ErrorRequestHandler)[] = []
 
   return Promise.resolve({
     _app: app,
-    beforeHandler: app.use.bind(app),
+    set: app.set.bind(app),
+
+    beforeHandler: (handler: RequestHandler | ErrorRequestHandler) => {
+      beforeHandlers.push(handler)
+    },
     afterHandler: (handler: RequestHandler | ErrorRequestHandler) => {
       afterHandlers.push(handler)
     },
-    set: app.set.bind(app),
+
     listen: (port: number, cb?: () => void) => {
       try {
+        beforeHandlers.forEach((handler) => app.use(handler))
         registerControllers(app, module)
         afterHandlers.forEach((handler) => app.use(handler))
       } catch (error) {

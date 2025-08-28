@@ -1,5 +1,7 @@
 import 'reflect-metadata'
 
+import type { Type } from '@/core/types'
+
 export class Container {
   static resolve<T>(target: Type<T>): T {
     const paramTypes = (Reflect.getMetadata('design:paramtypes', target) ??

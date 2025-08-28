@@ -1,7 +1,7 @@
-import type { Response } from 'express'
+import { Controller, Get, Guard, Query } from '@/core/common'
 
-import { Controller, Get, Guard, Res } from '@/core/common'
-
+import type { QueryType } from '@/app/app.schema'
+import { QuerySchema } from '@/app/app.schema'
 import { AppService } from '@/app/app.service'
 import { ExampleGuard } from '@/app/example.guard'
 
@@ -10,13 +10,23 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('/')
-  index(@Res() res: Response) {
-    res.send(this.appService.getHello())
+  index() {
+    return this.appService.getHello()
   }
 
   @Get('/private')
   @Guard(ExampleGuard)
-  private(@Res() res: Response) {
-    res.send('This is a private route')
+  private() {
+    return {
+      message: 'You have access to the private route!',
+    }
+  }
+
+  @Get('/query')
+  query(@Query(QuerySchema) query: QueryType) {
+    return {
+      message: 'This is a query route example.',
+      query,
+    }
   }
 }

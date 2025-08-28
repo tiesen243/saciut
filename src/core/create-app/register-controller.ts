@@ -1,12 +1,15 @@
 import type { Application, RequestHandler } from 'express'
 
 import type { CanActivate } from '@/core/common/guard'
+import type { Type } from '@/core/types'
 import {
   Container,
   getControllerPrefix,
   getControllers,
   getGuards,
+  getHttpCode,
   getProviders,
+  getResHeaders,
   getRoute,
   HttpException,
   isController,
@@ -57,11 +60,26 @@ export function registerControllers(app: Application, module: Type) {
         next()
       })
 
-      middlewares.push((req, res, next) => {
+      middlewares.push(async (req, res, next) => {
         try {
           const args = parseArgs(prototype, key, req, res, next)
-          // @ts-expect-error - index signature
-          Promise.resolve(controller[key as keyof Type](...args)).catch(next)
+
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const result = await Promise.resolve(
+            // @ts-expect-error - key is a string, but we know it's a valid method name
+            controller[key as keyof typeof controller](...args),
+          ).catch(next)
+
+          if (res.headersSent) return
+
+          const statusCode = getHttpCode(prototype, key)
+          const headers = getResHeaders(prototype, key)
+          res.status(statusCode)
+          for (const [k, v] of Object.entries(headers)) res.setHeader(k, v)
+
+          if (result === undefined) res.end()
+          else if (typeof result === 'object') res.json(result)
+          else res.send(String(result))
         } catch (err) {
           next(err)
         }

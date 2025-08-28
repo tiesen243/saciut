@@ -1,5 +1,7 @@
 import 'reflect-metadata'
 
+import type { Type } from '@/core/types'
+
 const CONTROLLERS_METADATA_KEY = Symbol('module:controllers')
 const PROVIDERS_METADATA_KEY = Symbol('module:providers')
 const CONTROLLER_METADATA_KEY = Symbol('metadata:controller')
