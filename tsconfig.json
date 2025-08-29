@@ -7,7 +7,8 @@
     "target": "esnext",
     "moduleResolution": "bundler",
     "lib": ["esnext"],
-    "types": ["node"],
+    "types": ["node", "vite/client"],
+    "rootDirs": [".", "./.react-router/types"],
 
     // Other Outputs
     "sourceMap": true,
@@ -33,6 +34,7 @@
 
     // Recommended Options
     "strict": true,
+    "jsx": "preserve",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
@@ -42,9 +44,10 @@
     // Path Aliases
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "~/*": ["app/*"],
+      "@/*": ["server/*"]
     }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["app", "server"],
+  "exclude": ["node_modules", "build", "dist"]
 }
