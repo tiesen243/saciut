@@ -25,7 +25,7 @@ async function bootstrap() {
     const viteDevServer = await import('vite').then(({ createServer }) =>
       createServer({ server: { middlewareMode: true }, appType: 'custom' }),
     )
-    app.beforeHandler(viteDevServer.middlewares)
+    app.afterHandler(viteDevServer.middlewares)
     app.afterHandler(viteServerHandler(viteDevServer))
   } else {
     app.afterHandler(
