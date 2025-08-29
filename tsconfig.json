@@ -42,9 +42,9 @@
     // Path Aliases
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["server/*"]
     }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["server"],
+  "exclude": ["node_modules", "build", "dist"]
 }

@@ -3,7 +3,7 @@ import { defineConfig } from 'tsdown'
 const isDev = process.env['NODE_ENV'] === 'development'
 
 export default defineConfig({
-  entry: './src/main.ts',
+  entry: './server/main.ts',
   clean: true,
   shims: true,
   minify: true,
