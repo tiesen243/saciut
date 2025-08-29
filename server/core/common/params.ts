@@ -14,7 +14,7 @@ export enum ParamType {
 
   BODY = 'body',
   QUERY = 'query',
-  PARAM = 'param',
+  PARAMS = 'params',
 
   HEADERS = 'headers',
   COOKIES = 'cookies',
@@ -72,8 +72,8 @@ export const Body = (schema?: ZodType): ParameterDecorator =>
   createParamDecorator(ParamType.BODY, schema)
 export const Query = (schema?: ZodType): ParameterDecorator =>
   createParamDecorator(ParamType.QUERY, schema)
-export const Param = (schema?: ZodType): ParameterDecorator =>
-  createParamDecorator(ParamType.QUERY, schema)
+export const Params = (schema?: ZodType): ParameterDecorator =>
+  createParamDecorator(ParamType.PARAMS, schema)
 export const Headers = (schema?: ZodType): ParameterDecorator =>
   createParamDecorator(ParamType.HEADERS, schema)
 export const Cookies = (schema?: ZodType): ParameterDecorator =>
