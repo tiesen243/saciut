@@ -10,4 +10,8 @@ export default defineConfig(({ isSsrBuild }) => ({
       ? { input: './server/react-router.ts' }
       : undefined,
   },
+  resolve:
+    process.env.NODE_ENV === 'production'
+      ? { alias: { 'react-dom/server': 'react-dom/server.node' } }
+      : {},
 }))
