@@ -16,7 +16,7 @@ async function bootstrap() {
   app.beforeHandler(express.json())
   app.beforeHandler(express.static('public'))
   app.beforeHandler(express.urlencoded({ extended: true }))
-  app._app.use(morgan('dev'))
+  app.beforeHandler(morgan('dev') as express.RequestHandler)
 
   app.afterHandler(
     (
