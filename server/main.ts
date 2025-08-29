@@ -7,8 +7,8 @@ import morgan from 'morgan'
 import { HttpException } from '@/core/common'
 import { createApp } from '@/core/create-app'
 
-import AppModule from '@/app/app.module'
 import { env } from '@/env'
+import AppModule from '@/modules/app.module'
 
 async function bootstrap() {
   const app = await createApp(AppModule)

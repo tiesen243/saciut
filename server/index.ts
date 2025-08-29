@@ -3,7 +3,7 @@
 
 import type { InferRouterOutputs, InterRouterInpuuts } from '@/core/types'
 
-import type { AppController } from '@/app/app.controller'
+import type { AppController } from '@/modules/app.controller'
 
 interface Controllers {
   app: AppController

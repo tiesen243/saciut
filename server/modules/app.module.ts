@@ -1,6 +1,6 @@
 import { Module } from '@/core/common'
 
-import { AppController } from '@/app/app.controller'
+import { AppController } from '@/modules/app.controller'
 
 @Module({
   imports: [],
