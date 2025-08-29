@@ -14,5 +14,6 @@ COPY package.json bun.lock ./
 RUN bun install --production
 
 COPY --from=builder /build/dist ./dist
-EXPOSE 3000
-CMD ["bun", "run", "dist/main.js"]
+
+ENV NODE_ENV=production
+CMD ["node", "dist/main.js"]

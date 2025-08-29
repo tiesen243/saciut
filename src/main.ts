@@ -7,6 +7,7 @@ import { HttpException } from '@/core/common'
 import { createApp } from '@/core/create-app'
 
 import AppModule from '@/app/app.module'
+import { env } from '@/env'
 
 async function bootstrap() {
   const app = await createApp(AppModule)
@@ -40,7 +41,7 @@ async function bootstrap() {
     },
   )
 
-  app.listen(3000, () => {
+  app.listen(env.PORT, () => {
     console.log('Server is running on http://localhost:3000')
   })
 }
