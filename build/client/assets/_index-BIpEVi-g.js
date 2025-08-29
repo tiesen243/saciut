@@ -1,1 +1,0 @@
-import{w as t,p as e}from"./chunk-PVWAREVJ-Dhc5g18Q.js";const s=t(function(){return e.jsxs("div",{children:[e.jsx("h1",{children:"Welcome to the Remix App!"}),e.jsx("p",{children:"This is the index route."})]})});export{s as default};
