@@ -1,5 +1,3 @@
-import '~/globals.css'
-
 import {
   isRouteErrorResponse,
   Links,
@@ -10,31 +8,43 @@ import {
 } from 'react-router'
 
 import type { Route } from './+types/root'
+import { Header } from '~/components/header'
+import globalsCss from '~/globals.css?url'
+import { ThemeProvider } from '~/hooks/use-theme'
 
+// prettier-ignore
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-  {
-    rel: 'preconnect',
-    href: 'https://fonts.gstatic.com',
-    crossOrigin: 'anonymous',
-  },
-  {
-    rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
-  },
+  { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
+  { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap' },
+  { rel: 'stylesheet', href: globalsCss },
+]
+
+// prettier-ignore
+export const meta: Route.MetaFunction = () => [
+  { title: 'Saciut' },
+  { name: 'description', content: 'A full stack app with Express and React Router' },
 ]
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+
+        <script>{`
+          // Fix FOUC when using dark mode
+          ;(function () {
+            const theme = localStorage.getItem('theme') ?? 'light'
+            if (theme === 'dark') document.documentElement.classList.add('dark')
+          })()
+        `}</script>
       </head>
-      <body>
-        {children}
+      <body className="font-sans flex flex-col min-h-dvh antialiased">
+        <ThemeProvider>{children}</ThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -43,7 +53,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />
+  return (
+    <>
+      <Header />
+      <Outlet />
+    </>
+  )
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

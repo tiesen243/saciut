@@ -8,4 +8,12 @@ export class AppController {
       message: 'Welcome to the API!',
     }
   }
+
+  @Get('/health')
+  health() {
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+    }
+  }
 }

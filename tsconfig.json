@@ -6,7 +6,7 @@
     "module": "preserve",
     "target": "esnext",
     "moduleResolution": "bundler",
-    "lib": ["esnext"],
+    "lib": ["esnext", "dom", "dom.iterable"],
     "types": ["node", "vite/client"],
     "rootDirs": [".", "./.react-router/types"],
 
