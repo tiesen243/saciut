@@ -33,7 +33,7 @@ export function parseArgs(
           ? parsedSchema(param.schema, req.query)
           : req.query
         break
-      case ParamType.PARAM:
+      case ParamType.PARAMS:
         args[param.index] = param.schema
           ? parsedSchema(param.schema, req.params)
           : req.params
