@@ -15,11 +15,22 @@ async function bootstrap() {
 
   app.beforeHandler(cookieParser())
   app.beforeHandler(cors())
-  app.beforeHandler(compression())
+  app.beforeHandler(
+    compression({
+      filter: (req) => !req.headers.accept?.includes('text/event-stream'),
+    }),
+  )
   app.beforeHandler(express.json())
   app.beforeHandler(express.static('public'))
   app.beforeHandler(express.urlencoded({ extended: true }))
-  app.beforeHandler(morgan('dev') as express.RequestHandler)
+  app.beforeHandler(
+    morgan('dev', {
+      skip: (req, _res) =>
+        ['/node_modules', '/app', '/@vite', '/@id'].some((prefix) =>
+          req.url.startsWith(prefix),
+        ),
+    }) as express.RequestHandler,
+  )
 
   if (env.NODE_ENV === 'development') {
     const viteDevServer = await import('vite').then(({ createServer }) =>
