@@ -13,6 +13,7 @@ import {
   getRoute,
   HttpException,
   isController,
+  isInject,
   isInjectable,
   isRoute,
 } from '@/core/common'
@@ -25,8 +26,10 @@ function normalizePath(path: string): string {
 export function registerControllers(app: Application, module: Type) {
   const providers = getProviders(module)
   for (const Provider of providers) {
-    if (!isInjectable(Provider))
+    if (!isInjectable(Provider) && !isInject(Provider))
       throw new Error(`Provider ${Provider.name} is not injectable`)
+    if ('provide' in Provider && 'useValue' in Provider)
+      Container.register(String(Provider.provide), Provider.useValue)
   }
 
   for (const Controller of getControllers(module)) {
@@ -50,12 +53,12 @@ export function registerControllers(app: Application, module: Type) {
 
       middlewares.push(async (req, res, next) => {
         for (const guard of guardInstances) {
-          if (typeof guard.canActivate !== 'function') return
-          const ok = await guard.canActivate(req, res, next)
-          if (ok) continue
-
-          if (res.headersSent) return
-          throw new HttpException('FORBIDDEN')
+          if (typeof guard.canActivate !== 'function')
+            throw new Error(
+              `Guard ${guard.constructor.name} does not implement canActivate method`,
+            )
+          const ok = await Promise.resolve(guard.canActivate(req, res, next))
+          if (!ok && !res.headersSent) throw new HttpException('FORBIDDEN')
         }
         next()
       })
@@ -68,12 +71,13 @@ export function registerControllers(app: Application, module: Type) {
           const result = await Promise.resolve(
             // @ts-expect-error - key is a string, but we know it's a valid method name
             controller[key as keyof typeof controller](...args),
-          ).catch(next)
+          )
 
           if (res.headersSent) return
 
           const statusCode = getHttpCode(prototype, key)
           const headers = getResHeaders(prototype, key)
+
           res.status(statusCode)
           for (const [k, v] of Object.entries(headers)) res.setHeader(k, v)
 
