@@ -7,11 +7,12 @@ const PROVIDERS_METADATA_KEY = Symbol('module:providers')
 const CONTROLLER_METADATA_KEY = Symbol('metadata:controller')
 const CONTROLLER_PREFIX_KEY = Symbol('metadata:controller:prefix')
 const INJECTABLE_METADATA_KEY = Symbol('metadata:injectable')
+const INJECT_METADATA_KEY = Symbol('metadata:inject')
 
 export function Module(options: {
   imports: Type[]
   controllers: Type[]
-  providers: Type[]
+  providers: (Type | { provide: string; useValue: unknown })[]
 }): ClassDecorator {
   return (target) => {
     const importedControllers = options.imports.flatMap(getControllers)
@@ -61,4 +62,26 @@ export function Injectable(): ClassDecorator {
 
 export function isInjectable(target: Type): boolean {
   return !!Reflect.getMetadata(INJECTABLE_METADATA_KEY, target)
+}
+
+export function Inject(token: string): ParameterDecorator {
+  return (target, _propertyKey, parameterIndex) => {
+    const existingInjectedParams = (Reflect.getOwnMetadata(
+      INJECT_METADATA_KEY,
+      target,
+    ) ?? {}) as Record<number, string>
+    existingInjectedParams[parameterIndex] = token
+    Reflect.defineMetadata(INJECT_METADATA_KEY, existingInjectedParams, target)
+  }
+}
+
+export function isInject(target: object): boolean {
+  return 'provide' in target && 'useValue' in target
+}
+
+export function getInjectedParams(target: object): Record<number, string> {
+  return (Reflect.getOwnMetadata(INJECT_METADATA_KEY, target) ?? {}) as Record<
+    number,
+    string
+  >
 }
