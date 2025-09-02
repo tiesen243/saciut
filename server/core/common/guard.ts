@@ -13,7 +13,8 @@ export interface CanActivate {
 }
 
 export function Guard(
-  ...guards: (new () => CanActivate)[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ...guards: (new (...args: any[]) => CanActivate)[]
 ): ClassDecorator & MethodDecorator {
   return (target: object, propertyKey?: string | symbol) => {
     if (propertyKey)

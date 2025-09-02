@@ -2,33 +2,40 @@ import 'reflect-metadata'
 
 import type { Type } from '@/core/types'
 
+const IMPORTS_METADATA_KEY = Symbol('module:imports')
 const CONTROLLERS_METADATA_KEY = Symbol('module:controllers')
 const PROVIDERS_METADATA_KEY = Symbol('module:providers')
+const EXPORTS_METADATA_KEY = Symbol('module:exports')
+
 const CONTROLLER_METADATA_KEY = Symbol('metadata:controller')
 const CONTROLLER_PREFIX_KEY = Symbol('metadata:controller:prefix')
 const INJECTABLE_METADATA_KEY = Symbol('metadata:injectable')
 const INJECT_METADATA_KEY = Symbol('metadata:inject')
 
 export function Module(options: {
-  imports: Type[]
-  controllers: Type[]
-  providers: (Type | { provide: string; useValue: unknown })[]
+  imports?: Type[]
+  controllers?: Type[]
+  providers?: Type[]
+  exports?: (Type | { provide: string; useValue: unknown })[]
 }): ClassDecorator {
   return (target) => {
-    const importedControllers = options.imports.flatMap(getControllers)
-    const importedProviders = options.imports.flatMap(getProviders)
-
+    Reflect.defineMetadata(IMPORTS_METADATA_KEY, options.imports ?? [], target)
     Reflect.defineMetadata(
       CONTROLLERS_METADATA_KEY,
-      [...options.controllers, ...importedControllers],
+      options.controllers ?? [],
       target,
     )
     Reflect.defineMetadata(
       PROVIDERS_METADATA_KEY,
-      [...options.providers, ...importedProviders],
+      options.providers ?? [],
       target,
     )
+    Reflect.defineMetadata(EXPORTS_METADATA_KEY, options.exports ?? [], target)
   }
+}
+
+export function getImports(target: Type): Type[] {
+  return (Reflect.getMetadata(IMPORTS_METADATA_KEY, target) ?? []) as Type[]
 }
 
 export function getControllers(target: Type): Type[] {
@@ -37,6 +44,10 @@ export function getControllers(target: Type): Type[] {
 
 export function getProviders(target: Type): Type[] {
   return (Reflect.getMetadata(PROVIDERS_METADATA_KEY, target) ?? []) as Type[]
+}
+
+export function getExports(target: Type): Type[] {
+  return (Reflect.getMetadata(EXPORTS_METADATA_KEY, target) ?? []) as Type[]
 }
 
 export function Controller(prefix = '/'): ClassDecorator {

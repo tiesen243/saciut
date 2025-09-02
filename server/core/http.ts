@@ -8,36 +8,17 @@ export type HTTPMethod =
   | 'head'
   | 'all'
 
-export const HttpStatus = {
-  // 1xx Informational
-  CONTINUE: 100,
-  SWITCHING_PROTOCOLS: 101,
-  PROCESSING: 102,
-  EARLY_HINTS: 103,
+export const defaultStatusByMethod: Record<string, number> = {
+  get: 200,
+  post: 201,
+  put: 200,
+  patch: 200,
+  delete: 204,
+  options: 204,
+  head: 200,
+}
 
-  // 2xx Success
-  OK: 200,
-  CREATED: 201,
-  ACCEPTED: 202,
-  NON_AUTHORITATIVE_INFORMATION: 203,
-  NO_CONTENT: 204,
-  RESET_CONTENT: 205,
-  PARTIAL_CONTENT: 206,
-  MULTI_STATUS: 207,
-  ALREADY_REPORTED: 208,
-  IM_USED: 226,
-
-  // 3xx Redirection
-  MULTIPLE_CHOICES: 300,
-  MOVED_PERMANENTLY: 301,
-  FOUND: 302,
-  SEE_OTHER: 303,
-  NOT_MODIFIED: 304,
-  USE_PROXY: 305,
-  SWITCH_PROXY: 306,
-  TEMPORARY_REDIRECT: 307,
-  PERMANENT_REDIRECT: 308,
-
+export const HttpErrorStatus = {
   // 4xx Client Errors
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-type Type<T = any> = new (...args: any[]) => T
+export type Type<T = any> = new (...args: any[]) => T
 
 export type InterRouterInpuuts<TServices extends Record<string, any>> = {
   [TService in keyof TServices]: {

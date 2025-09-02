@@ -68,6 +68,7 @@ export const Req = (): ParameterDecorator => createParamDecorator(ParamType.REQ)
 export const Res = (): ParameterDecorator => createParamDecorator(ParamType.RES)
 export const Next = (): ParameterDecorator =>
   createParamDecorator(ParamType.NEXT)
+
 export const Body = (schema?: ZodType): ParameterDecorator =>
   createParamDecorator(ParamType.BODY, schema)
 export const Query = (schema?: ZodType): ParameterDecorator =>

@@ -1,7 +1,7 @@
 import { Module } from '@/core/common'
 
-import { AppController } from '@/modules/app.controller'
-import { AppService } from '@/modules/app.service'
+import { AppController } from '@/app.controller'
+import { AppService } from '@/app.service'
 
 @Module({
   imports: [],

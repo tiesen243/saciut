@@ -1,6 +1,6 @@
 import { Controller, Get } from '@/core/common'
 
-import { AppService } from '@/modules/app.service'
+import { AppService } from '@/app.service'
 
 @Controller()
 export class AppController {
