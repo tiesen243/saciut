@@ -39,31 +39,29 @@ bun install
 ### Usage
 
 ```typescript
-import type { Response } from 'express'
-
-import { Controller, Get, Injectable, Module, Res } from '@/core/common'
+import { Controller, Get, Injectable, Module } from '@/core/common'
 
 @Injectable()
-class MyService {
+class AppService {
   getMessage() {
-    return 'Hello from MyService!'
+    return 'Hello from AppService!'
   }
 }
 
 @Controller('/hello')
-class HelloController {
-  constructor(private myService: MyService) {}
+class AppController {
+  constructor(private appService: AppService) {}
 
   @Get('/')
-  sayHello(@Res res: Response) {
-    res.send(this.myService.getMessage())
+  sayHello() {
+    return this.appService.getMessage()
   }
 }
 
 @Module({
   imports: [],
-  controllers: [HelloController],
-  providers: [MyService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 class AppModule {}
 ```
@@ -81,6 +79,9 @@ yarn dev
 pnpm dev
 # or
 bun dev
+
+# If you using bun, you can also run directly
+bun run --hot src/main.ts
 ```
 
 ## Documentation
