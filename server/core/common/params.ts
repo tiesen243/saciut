@@ -1,7 +1,6 @@
 import 'reflect-metadata'
 
-import type { ZodType } from 'zod'
-import { flattenError } from 'zod'
+import * as z from 'zod'
 
 import { HttpException } from '@/core/common'
 
@@ -23,12 +22,12 @@ export enum ParamType {
 interface ParamValue {
   index: number
   type: ParamType
-  schema: ZodType | undefined
+  schema: z.ZodType | undefined
 }
 
 function createParamDecorator(
   type: ParamType,
-  schema?: ZodType,
+  schema?: z.ZodType,
 ): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
     const existingParams = (Reflect.getOwnMetadata(
@@ -47,18 +46,18 @@ function createParamDecorator(
 }
 
 export function getParams<
-  T extends { index: number; type: ParamType; schema?: ZodType },
+  T extends { index: number; type: ParamType; schema?: z.ZodType },
 >(target: object, propertyKey: string | symbol): T[] {
   return (Reflect.getOwnMetadata(PARAMETTERS_KEY, target, propertyKey) ??
     []) as T[]
 }
 
-export function parsedSchema(schema: ZodType, data: unknown) {
+export function parsedSchema(schema: z.ZodType, data: unknown) {
   const parsed = schema.safeParse(data)
   if (!parsed.success)
     throw new HttpException('BAD_REQUEST', {
       message: 'Invalid request data',
-      details: flattenError(parsed.error).fieldErrors,
+      details: z.flattenError(parsed.error).fieldErrors,
     })
 
   return parsed.data
@@ -69,13 +68,13 @@ export const Res = (): ParameterDecorator => createParamDecorator(ParamType.RES)
 export const Next = (): ParameterDecorator =>
   createParamDecorator(ParamType.NEXT)
 
-export const Body = (schema?: ZodType): ParameterDecorator =>
+export const Body = (schema?: z.ZodType): ParameterDecorator =>
   createParamDecorator(ParamType.BODY, schema)
-export const Query = (schema?: ZodType): ParameterDecorator =>
+export const Query = (schema?: z.ZodType): ParameterDecorator =>
   createParamDecorator(ParamType.QUERY, schema)
-export const Params = (schema?: ZodType): ParameterDecorator =>
+export const Params = (schema?: z.ZodType): ParameterDecorator =>
   createParamDecorator(ParamType.PARAMS, schema)
-export const Headers = (schema?: ZodType): ParameterDecorator =>
+export const Headers = (schema?: z.ZodType): ParameterDecorator =>
   createParamDecorator(ParamType.HEADERS, schema)
-export const Cookies = (schema?: ZodType): ParameterDecorator =>
+export const Cookies = (schema?: z.ZodType): ParameterDecorator =>
   createParamDecorator(ParamType.COOKIES, schema)
